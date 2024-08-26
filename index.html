@@ -16,99 +16,22 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
-        <style>
-            .footer {
-                position: fixed;
-                bottom: -100px;
-                width: 100%;
-                padding: 1rem 0;
-                transition: bottom 0.5s ease-in-out;
-            }
-            :root {
-                --color2: #56d5fc;
-                --color4: #def700;
-                --color6: #fa3195;
-            }
-
-            * {
-                margin: 0;
-                padding: 0;
-            }
-
-            
-            .clock_box {
-                position: relative;
-                width: 600px;
-                height: 150px;
-                border-radius: 10px;
-                background-image: linear-gradient(135deg, var(--color2), var(--color4), var(--color6));
-                /* 居中 */
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                animation: animate 4s linear infinite;
-            }
-
-            .clock_box::after, .clock_box::before {
-                position: absolute;
-                content: "";
-                /* 集成父级样式 */
-                background-image: inherit;
-                width: 100%;
-                height: 100%;
-                z-index: -1;
-                border-radius: 10px;
-                filter: blur(15px);
-            }
-
-            .clock {
-                position: absolute;
-                left: 10px;
-                right: 10px;
-                top: 10px;
-                bottom: 10px;
-                background-color: #2b2a2a;
-                border-radius: 8px;
-                /* 居中 */
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-            }
-
-            .clock p {
-                font-size: 70px;
-                font-weight: bold;
-                color: transparent;
-                letter-spacing: 2px;
-                background-image: linear-gradient(135deg, var(--color2), var(--color4), var(--color6));
-                /* text不是通用样式属性值 */
-                background-clip: text;
-                /* 这个是chrome */
-                -webkit-background-clip: text;
-            }
-
-            @keyframes animate {
-                100% {
-                    /* 色相变化 */
-                    filter: hue-rotate(360deg);
-                }
-            }
-
-            .clock_container {
-                width: auto;
-                height: 300px;
-                display: flex;
-                align-items: center;
-                background-color: #000;
-            }
-
-        </style>
+        <!-- 时钟CSS -->
+        <link
+            rel="stylesheet"
+            href="/css/timer.css"
+        />
+        <!-- CSS -->
+        <link
+            rel="stylesheet"
+            href="/css/style.css"
+        />
     </head>
 
     <body>
         <header>
             <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" id="PageFooter">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-custom">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">导航</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,7 +56,9 @@
                 </div>
             </nav>
         </header>
+
         <main>
+            <!-- 时钟 -->
             <div class="clock_container">
                 <div class="container clock_box">
                     <div class="clock">
@@ -141,45 +66,22 @@
                     </div>
                 </div>
             </div>
-                <script>
-                    // 获取页面id=time的元素（P元素<p id="time">12:12:12 AM</p>）
-                    var time = document.querySelector("#time");
-            
-                    // 定义函数传入time元素
-                    function up(time_el) {
-                        // 获取当前时间
-                        let date = new Date();
-                        // 获取时分秒
-                        let h = date.getHours();
-                        let m = date.getMinutes();
-                        let s = date.getSeconds();
-                        // 上午与下午
-                        let day_night = "AM";
-            
-                        // 计算上午与下午
-                        if (h > 12) {
-                            h = h - 12;
-                            day_night = "PM";
-                        }
-            
-                        // 如果时间小于10则前面补充0
-                        if (h < 10) { h = "0" + h; }
-                        if (m < 10) { m = "0" + m; }
-                        if (s < 10) { s = "0" + s; }
-            
-                        // 拼接时间并且赋值给time元素的文本中，从而显示
-                        time_el.textContent = h + ":" + m + ":" + s + " " + day_night;
-            
-                    }
-            
-                    // 定时器，每秒执行一次实现更新
-                    setInterval(() => {
-                        up(time);
-                    }, 1000);
-            
-                </script>
+
+        <div class="brief">
+            <div class="container brief-info">
+                <h2>关于我(｡╹ω╹｡)</h2>
+                <li>在校大学牲(～￣▽￣)～</li>
+                <li>CV工程师(*￣▽￣*)</li>
+                <li>略懂蟒蛇开发(●'◡'●)</li>
+                <li>初学C艹⊙﹏⊙</li>
+                <li>了解过JVAV(T_T)</li>
+                <li>眼熟前端三剑客O.O</li>
+                <li>精通电脑开关机并会重装汐统( •̀ ω •́ )✧</li>
+                <li>精通各Linux发行版的关机重启(*°▽°*)</li>
+            </div>
+        </div>
         </main>
-        <footer class="bg-dark text-white mt-5">
+        <footer class="bg-dark text-white" id="PageFooter">
             <div class="container py-4">
                 <div class="row">
                     <div class="col-md-6">
@@ -216,16 +118,12 @@
             integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
             crossorigin="anonymous"
         ></script>
+        <!-- jQuery -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        <!-- 时钟JS -->
+        <script type="text/javascript" src="/js/timer.js"></script>
+        <!-- JS -->
+         <script type="text/javascript" src="/js/index.js"></script>
 
-        <script>
-            window.onscroll = function() {
-                var footer = document.getElementById("pageFooter");
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                    footer.style.bottom = "0";
-                } else {
-                    footer.style.bottom = "-100px";
-                }
-            };
-        </script>
     </body>
 </html>

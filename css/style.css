@@ -1,0 +1,32 @@
+.footer {
+    position: fixed;
+    bottom: -100px;
+    width: 100%;
+    padding: 1rem 0;
+    transition: bottom 0.5s ease-in-out;
+}
+:root {
+    --color2: #56d5fc;
+    --color4: #def700;
+    --color6: #fa3195;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-custom {
+    --bs-bg-opacity: 0.85; /*设置导航栏不透明度*/
+}
+
+.brief{
+    background-color: #313131;
+    padding: 40px 0px;
+    width: auto;
+    height: 1000px;
+}
+
+.brief-info{
+    color:white;
+}
