@@ -1,0 +1,924 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+    <link rel="canonical" href="https://www.letr7.com/2026/06/15/cracking-pathfinder-macos/"/>
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="letr">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="0x00 起因 Path Finder 是一款强大的 macOS 文件管理器，功能远超原生 Finder。但从某个版本开始转为付费订阅制，未激活版本仅有30天试用。 在 glm 的辅助下进行了逆向分析，并做了一个 PoC 脚本。  注：本文仅学习交流技术原理，请购买正版许可证支持正版  0x01 初步分析 先看看 Path Finder.app 的结构： 12345678910Path Finde">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Path Finder macOS版破解">
+<meta property="og:url" content="https://www.letr7.com/2026/06/15/cracking-pathfinder-macos/index.html">
+<meta property="og:site_name" content="Letr的个人博客(～￣▽￣)～">
+<meta property="og:description" content="0x00 起因 Path Finder 是一款强大的 macOS 文件管理器，功能远超原生 Finder。但从某个版本开始转为付费订阅制，未激活版本仅有30天试用。 在 glm 的辅助下进行了逆向分析，并做了一个 PoC 脚本。  注：本文仅学习交流技术原理，请购买正版许可证支持正版  0x01 初步分析 先看看 Path Finder.app 的结构： 12345678910Path Finde">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T04:30:18.758Z">
+<meta property="article:author" content="Letr">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>记一次Path Finder macOS版破解 - Letr的个人博客(～￣▽￣)～</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.letr7.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Letr&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="记一次Path Finder macOS版破解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        letr
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-15 16:00" pubdate>
+          2026年6月15日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">记一次Path Finder macOS版破解</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2026-09-02T04:30:18+00:00
+                  
+                  
+
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="0x00-起因">0x00 起因</h2>
+<p>Path Finder 是一款强大的 macOS 文件管理器，功能远超原生 Finder。但从某个版本开始转为付费订阅制，未激活版本仅有30天试用。</p>
+<p>在 glm 的辅助下进行了逆向分析，并做了一个 PoC 脚本。</p>
+<blockquote>
+<p>注：本文仅学习交流技术原理，请购买正版许可证支持正版</p>
+</blockquote>
+<h2 id="0x01-初步分析">0x01 初步分析</h2>
+<p>先看看 Path Finder.app 的结构：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">Path Finder.app/<br>├── Contents/<br>│   ├── MacOS/<br>│   │   └── Path Finder          ← Mach-O universal binary (x86_64 + arm64)<br>│   ├── Frameworks/<br>│   │   └── PathFinderLicense.framework/<br>│   │       └── Versions/A/<br>│   │           └── PathFinderLicense    ← 许可证框架<br>│   └── Resources/<br>│       └── ...<br></code></pre></td></tr></table></figure>
+<p>这是一个原生 Cocoa 应用，许可证验证逻辑被封装在独立的 <code>PathFinderLicense.framework</code> 中。</p>
+<p>用 <code>file</code> 确认二进制类型：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ file PathFinderLicense<br>Mach-O universal binary with 2 architectures: [x86_64] [arm64]<br></code></pre></td></tr></table></figure>
+<p>代码签名是 adhoc，说明 patch 后重签名很方便：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ codesign -d --verbose <span class="hljs-string">&quot;Path Finder.app&quot;</span><br>Signature=adhoc<br></code></pre></td></tr></table></figure>
+<h2 id="0x02-寻找突破口">0x02 寻找突破口</h2>
+<p>用 <code>strings</code> 搜索关键信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ strings PathFinderLicense | grep -i <span class="hljs-string">&quot;license\|keychain&quot;</span><br>com.cocoatech.PathFinder.Registration<br>application-password-v1<br>PFLicenseManager<br>isActive<br>loadLicenseInfoFromKeychain<br></code></pre></td></tr></table></figure>
+<p>发现了关键类 <code>PFLicenseManager</code> 和方法 <code>isActive</code>、<code>loadLicenseInfoFromKeychain</code>。</p>
+<p>用 <code>nm</code> 查看符号表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ nm PathFinderLicense | grep -i <span class="hljs-string">&quot;isActive\|loadLicense&quot;</span><br>0000d3cc T -[PFLicenseManager isActive]<br>00015960 T -[PFLicenseManager loadLicenseInfoFromKeychain]<br></code></pre></td></tr></table></figure>
+<p>找到了，<code>isActive</code> 方法在 <code>0xd3cc</code> 偏移处（arm64 架构的地址）。</p>
+<h2 id="0x03-逆向激活流程">0x03 逆向激活流程</h2>
+<h3 id="静态分析">静态分析</h3>
+<p>用 <code>radare2</code> 反汇编 <code>isActive</code> 方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ r2 -A PathFinderLicense<br>[0x00000000]&gt; s 0x0000d3cc<br>[0x0000d3cc]&gt; pdf<br></code></pre></td></tr></table></figure>
+<p>发现方法逻辑很简单：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 保存栈帧<br><span class="hljs-bullet">2.</span> 从 self 读取某个状态字段<br><span class="hljs-bullet">3.</span> 返回 bool 值<br></code></pre></td></tr></table></figure>
+<p>再看 <code>loadLicenseInfoFromKeychain</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 构造 Keychain 查询参数<br><span class="hljs-bullet">   -</span> service: &quot;com.cocoatech.PathFinder.Registration&quot;<br><span class="hljs-bullet">   -</span> account: &quot;application-password-v1&quot;<br><span class="hljs-bullet">   -</span> class: kSecClassGenericPassword<br><span class="hljs-bullet">2.</span> 调用 SecItemCopyMatching<br><span class="hljs-bullet">3.</span> 解析返回的数据<br><span class="hljs-bullet">4.</span> 更新 licenseStatus<br></code></pre></td></tr></table></figure>
+<h3 id="关键发现">关键发现</h3>
+<p>通过进一步分析应用启动流程，发现：</p>
+<ol>
+<li><code>AppDelegate</code> 在 <code>applicationDidFinishLaunching:</code> 中初始化 <code>PFLicenseManager</code></li>
+<li><code>PFLicenseManager.init</code> 会创建网络队列、Keychain 队列，并初始化许可证状态字段</li>
+<li>调用 <code>loadLicenseInfoFromKeychain</code> 从 Keychain 读取激活信息</li>
+<li>在需要验证时调用 <code>isActive</code> 方法检查激活状态</li>
+</ol>
+<p>还发现了一个关键的状态检查点：在 <code>licenseInfoUpdated:</code> 方法中有一个条件跳转，用于检查 <code>isActive</code> 的返回值。如果返回 false，会触发弹窗提示激活。</p>
+<h2 id="0x04-破解思路">0x04 破解思路</h2>
+<p>基于上述分析，确定了两个补丁点：</p>
+<h3 id="1-强制-isActive-返回-true">1. 强制 isActive 返回 true</h3>
+<p><strong>arm64 架构：</strong></p>
+<p>原始指令（函数序言）：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs llvm">f<span class="hljs-number">6</span> <span class="hljs-number">57</span> bd a<span class="hljs-number">9</span>    stp <span class="hljs-keyword">x</span><span class="hljs-number">22</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-number">21</span><span class="hljs-punctuation">,</span> [sp<span class="hljs-punctuation">,</span> #<span class="hljs-number">-0</span><span class="hljs-keyword">x</span><span class="hljs-number">30</span>]!<br>f<span class="hljs-number">4</span> <span class="hljs-number">4</span>f <span class="hljs-number">01</span> a<span class="hljs-number">9</span>    stp <span class="hljs-keyword">x</span><span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-number">19</span><span class="hljs-punctuation">,</span> [sp<span class="hljs-punctuation">,</span> <span class="hljs-variable">#0</span><span class="hljs-keyword">x</span><span class="hljs-number">10</span>]<br>...<br></code></pre></td></tr></table></figure>
+<p>替换为：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">20</span> <span class="hljs-number">00</span> <span class="hljs-number">80</span> <span class="hljs-number">52</span>    mov w0, #<span class="hljs-number">1</span>        ; 返回 true<br><span class="hljs-attribute">c0</span> <span class="hljs-number">03</span> <span class="hljs-number">5</span>f d6    ret               ; 立即返回<br></code></pre></td></tr></table></figure>
+<p><strong>x86_64 架构：</strong></p>
+<p>原始指令（函数序言）：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">55</span>             <span class="hljs-keyword">push</span> <span class="hljs-built_in">rbp</span><br><span class="hljs-number">48</span> <span class="hljs-number">89</span> e5       <span class="hljs-keyword">mov</span> <span class="hljs-built_in">rbp</span>, <span class="hljs-built_in">rsp</span><br>...<br></code></pre></td></tr></table></figure>
+<p>替换为：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-number">31</span> <span class="hljs-keyword">c</span><span class="hljs-number">0</span>          <span class="hljs-keyword">xor</span> eax<span class="hljs-punctuation">,</span> eax      <span class="hljs-comment">; eax = 0</span><br>ff <span class="hljs-keyword">c</span><span class="hljs-number">0</span>          inc eax           <span class="hljs-comment">; eax = 1</span><br><span class="hljs-keyword">c</span><span class="hljs-number">3</span>             <span class="hljs-keyword">ret</span>               <span class="hljs-comment">; 返回</span><br></code></pre></td></tr></table></figure>
+<h3 id="2-NOP-掉状态检查跳转">2. NOP 掉状态检查跳转</h3>
+<p>在 <code>licenseInfoUpdated:</code> 中找到调用 <code>isActive</code> 后的条件跳转：</p>
+<p><strong>arm64 架构：</strong></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-number">9</span>c <span class="hljs-number">48</span> <span class="hljs-number">00</span> <span class="hljs-number">94</span>    bl isActive<br><span class="hljs-symbol">60 </span><span class="hljs-number">01</span> <span class="hljs-number">00</span> <span class="hljs-number">34</span>    cbz w0, &lt;skip&gt;     ; 如果 w0=<span class="hljs-number">0</span> 跳过激活逻辑<br></code></pre></td></tr></table></figure>
+<p>把 <code>cbz</code> 替换为 <code>nop</code>：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1f</span> <span class="hljs-number">20</span> <span class="hljs-number">03</span> d5    nop<br></code></pre></td></tr></table></figure>
+<p><strong>x86_64 架构：</strong></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">41 </span>ff d5       <span class="hljs-keyword">call</span> r13           ; 调用 isActive<br><span class="hljs-symbol">84 </span>c0          test al, al<br><span class="hljs-symbol">74 </span>xx          je &lt;skip&gt;          ; 如果 al=<span class="hljs-number">0</span> 跳过<br></code></pre></td></tr></table></figure>
+<p>把 <code>je</code> 替换为 <code>nop</code>：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">90 </span><span class="hljs-number">90</span>          nop nop<br></code></pre></td></tr></table></figure>
+<h2 id="0x05-动态查找方案">0x05 动态查找方案</h2>
+<p>由于不同版本的 Path Finder 方法地址可能不同，硬编码偏移不够通用。遂采用<strong>动态查找</strong>的方式：</p>
+<ol>
+<li>用 <code>radare2</code> 的 <code>ic</code> 命令查找 Objective-C 方法地址</li>
+<li>用 <code>/x</code> 命令搜索指令特征模式</li>
+<li>计算 fat binary 中每个架构的基址偏移</li>
+<li>组合得到最终的补丁地址</li>
+</ol>
+<h3 id="关键技术点">关键技术点</h3>
+<p><strong>查找方法地址：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ r2 -q -c <span class="hljs-string">&#x27;ic~isActive&#x27;</span> PathFinderLicense<br>0x0000d3cc objc method 1 isActive<br></code></pre></td></tr></table></figure>
+<p><strong>搜索指令模式（arm64）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ r2 -q -c <span class="hljs-string">&#x27;/x 9c48009460010034&#x27;</span> PathFinderLicense.arm64<br>0x00004e30 hit0_0 9c48009460010034<br></code></pre></td></tr></table></figure>
+<p><strong>解析 fat binary 架构偏移：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ lipo -detailed_info PathFinderLicense<br>architecture arm64<br>    offset 16384<br>architecture x86_64<br>    offset 98304<br></code></pre></td></tr></table></figure>
+<p>最终补丁地址 = 架构基址 + 方法偏移。</p>
+<h2 id="0x06-实现">0x06 实现</h2>
+<p>完整的破解流程：</p>
+<h3 id="1-提取架构切片">1. 提取架构切片</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;lipo&#x27;</span>, [<span class="hljs-string">&#x27;-thin&#x27;</span>, <span class="hljs-string">&#x27;arm64&#x27;</span>, frameworkPath, <span class="hljs-string">&#x27;-output&#x27;</span>, arm64Path]);<br><span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;lipo&#x27;</span>, [<span class="hljs-string">&#x27;-thin&#x27;</span>, <span class="hljs-string">&#x27;x86_64&#x27;</span>, frameworkPath, <span class="hljs-string">&#x27;-output&#x27;</span>, x86Path]);<br></code></pre></td></tr></table></figure>
+<h3 id="2-动态查找补丁点">2. 动态查找补丁点</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> arm64IsActive = <span class="hljs-title function_">r2FindMethod</span>(arm64Path, <span class="hljs-string">&#x27;isActive&#x27;</span>);<br><span class="hljs-keyword">const</span> arm64StatusBase = <span class="hljs-title function_">r2FindPattern</span>(arm64Path, <span class="hljs-string">&#x27;9c 48 00 94 60 01 00 34&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<h3 id="3-应用补丁">3. 应用补丁</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> patches = [<br>    &#123;<br>        <span class="hljs-attr">arch</span>: <span class="hljs-string">&#x27;arm64&#x27;</span>,<br>        <span class="hljs-attr">desc</span>: <span class="hljs-string">&#x27;isActive -&gt; true&#x27;</span>,<br>        <span class="hljs-attr">offset</span>: archOffset.<span class="hljs-property">arm64</span> + arm64IsActive,<br>        <span class="hljs-attr">original</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0xF6</span>, <span class="hljs-number">0x57</span>, <span class="hljs-number">0xBD</span>, <span class="hljs-number">0xA9</span>, <span class="hljs-number">0xF4</span>, <span class="hljs-number">0x4F</span>, <span class="hljs-number">0x01</span>, <span class="hljs-number">0xA9</span>]),<br>        <span class="hljs-attr">patched</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x20</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x80</span>, <span class="hljs-number">0x52</span>, <span class="hljs-number">0xC0</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x5F</span>, <span class="hljs-number">0xD6</span>])<br>    &#125;,<br>    <span class="hljs-comment">// ... x86_64 补丁</span><br>];<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> patch <span class="hljs-keyword">of</span> patches) &#123;<br>    <span class="hljs-keyword">const</span> current = binary.<span class="hljs-title function_">slice</span>(patch.<span class="hljs-property">offset</span>, patch.<span class="hljs-property">offset</span> + patch.<span class="hljs-property">original</span>.<span class="hljs-property">length</span>);<br>    <span class="hljs-keyword">if</span> (!current.<span class="hljs-title function_">equals</span>(patch.<span class="hljs-property">original</span>)) &#123;<br>        <span class="hljs-title function_">fail</span>(<span class="hljs-string">`字节不匹配 @ 0x<span class="hljs-subst">$&#123;patch.offset.toString(<span class="hljs-number">16</span>)&#125;</span>`</span>);<br>    &#125;<br>    patch.<span class="hljs-property">patched</span>.<span class="hljs-title function_">copy</span>(binary, patch.<span class="hljs-property">offset</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="4-备份-重签名">4. 备份 + 重签名</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">fs.<span class="hljs-title function_">copyFileSync</span>(frameworkPath, <span class="hljs-string">`<span class="hljs-subst">$&#123;frameworkPath&#125;</span>.bak`</span>);<br>fs.<span class="hljs-title function_">writeFileSync</span>(frameworkPath, binary);<br><span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;codesign&#x27;</span>, [<span class="hljs-string">&#x27;--force&#x27;</span>, <span class="hljs-string">&#x27;--deep&#x27;</span>, <span class="hljs-string">&#x27;--sign&#x27;</span>, <span class="hljs-string">&#x27;-&#x27;</span>, appPath]);<br></code></pre></td></tr></table></figure>
+<h2 id="0x07-总结">0x07 总结</h2>
+<p>最终写成了一个脚本，支持一键激活和一键回滚。</p>
+<p>需要前置依赖<code>radare2</code>，安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install radare2<br></code></pre></td></tr></table></figure>
+<details>
+<summary>完整脚本 (crack.js)</summary>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-meta">#!/usr/bin/env node</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Path Finder 激活脚本</span><br><span class="hljs-comment"> * 原理：动态查找补丁点并修改许可证框架</span><br><span class="hljs-comment"> * 依赖：radare2</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 用法：</span><br><span class="hljs-comment"> *   node crack.js           # patch</span><br><span class="hljs-comment"> *   node crack.js --rollback</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>);<br><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>);<br><span class="hljs-keyword">const</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;os&#x27;</span>);<br><span class="hljs-keyword">const</span> &#123; spawnSync &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;child_process&#x27;</span>);<br><br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEFAULT_APP_PATH</span> = <span class="hljs-string">&#x27;/Applications/Path Finder.app&#x27;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CONFIG_FILE</span> = path.<span class="hljs-title function_">join</span>(os.<span class="hljs-title function_">homedir</span>(), <span class="hljs-string">&#x27;.pathfinder_crack_config.json&#x27;</span>);<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">bin, args, opts = &#123;&#125;</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_">spawnSync</span>(bin, args, &#123; <span class="hljs-attr">encoding</span>: <span class="hljs-string">&#x27;utf8&#x27;</span>, ...opts &#125;);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">fail</span>(<span class="hljs-params">msg</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">`❌ <span class="hljs-subst">$&#123;msg&#125;</span>`</span>);<br>    process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getFrameworkPath</span>(<span class="hljs-params">appPath</span>) &#123;<br>    <span class="hljs-keyword">return</span> path.<span class="hljs-title function_">join</span>(appPath, <span class="hljs-string">&#x27;Contents&#x27;</span>, <span class="hljs-string">&#x27;Frameworks&#x27;</span>, <span class="hljs-string">&#x27;PathFinderLicense.framework&#x27;</span>, <span class="hljs-string">&#x27;Versions&#x27;</span>, <span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;PathFinderLicense&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">loadConfig</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(fs.<span class="hljs-title function_">readFileSync</span>(<span class="hljs-variable constant_">CONFIG_FILE</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>));<br>    &#125; <span class="hljs-keyword">catch</span> &#123;<br>        <span class="hljs-keyword">return</span> &#123;&#125;;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">saveConfig</span>(<span class="hljs-params">data</span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        fs.<span class="hljs-title function_">writeFileSync</span>(<span class="hljs-variable constant_">CONFIG_FILE</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(data, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>));<br>    &#125; <span class="hljs-keyword">catch</span> &#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">resolveAppPath</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> config = <span class="hljs-title function_">loadConfig</span>();<br>    <span class="hljs-keyword">if</span> (config.<span class="hljs-property">path</span> &amp;&amp; fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getFrameworkPath</span>(config.<span class="hljs-property">path</span>))) <span class="hljs-keyword">return</span> config.<span class="hljs-property">path</span>;<br>    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getFrameworkPath</span>(<span class="hljs-variable constant_">DEFAULT_APP_PATH</span>))) &#123;<br>        <span class="hljs-title function_">saveConfig</span>(&#123; ...config, <span class="hljs-attr">path</span>: <span class="hljs-variable constant_">DEFAULT_APP_PATH</span> &#125;);<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">DEFAULT_APP_PATH</span>;<br>    &#125;<br>    <span class="hljs-title function_">fail</span>(<span class="hljs-string">&#x27;未找到 Path Finder.app&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">requireR2</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;which&#x27;</span>, [<span class="hljs-string">&#x27;r2&#x27;</span>]).<span class="hljs-property">status</span> !== <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-title function_">fail</span>(<span class="hljs-string">&#x27;需要先安装 radare2：brew install radare2&#x27;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">parseArchOffsets</span>(<span class="hljs-params">frameworkPath</span>) &#123;<br>    <span class="hljs-keyword">const</span> out = <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;lipo&#x27;</span>, [<span class="hljs-string">&#x27;-detailed_info&#x27;</span>, frameworkPath]).<span class="hljs-property">stdout</span>;<br>    <span class="hljs-keyword">const</span> arm64 = out.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/architecture arm64[\s\S]*?offset (\d+)/</span>);<br>    <span class="hljs-keyword">const</span> x86_64 = out.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/architecture x86_64[\s\S]*?offset (\d+)/</span>);<br>    <span class="hljs-keyword">if</span> (!arm64 || !x86_64) <span class="hljs-title function_">fail</span>(<span class="hljs-string">&#x27;无法解析 fat binary 架构偏移&#x27;</span>);<br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-attr">arm64</span>: <span class="hljs-title class_">Number</span>(arm64[<span class="hljs-number">1</span>]),<br>        <span class="hljs-attr">x86_64</span>: <span class="hljs-title class_">Number</span>(x86_64[<span class="hljs-number">1</span>])<br>    &#125;;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">r2FindMethod</span>(<span class="hljs-params">binaryPath, methodName</span>) &#123;<br>    <span class="hljs-keyword">const</span> out = <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;r2&#x27;</span>, [<span class="hljs-string">&#x27;-q&#x27;</span>, <span class="hljs-string">&#x27;-c&#x27;</span>, <span class="hljs-string">`ic~<span class="hljs-subst">$&#123;methodName&#125;</span>`</span>, binaryPath], &#123; <span class="hljs-attr">timeout</span>: <span class="hljs-number">30000</span> &#125;).<span class="hljs-property">stdout</span>;<br>    <span class="hljs-keyword">const</span> match = out.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/0x([0-9a-f]+)/i</span>);<br>    <span class="hljs-keyword">return</span> match ? <span class="hljs-title class_">Number</span>.<span class="hljs-built_in">parseInt</span>(match[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>) : <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">r2FindPattern</span>(<span class="hljs-params">binaryPath, hexBytes</span>) &#123;<br>    <span class="hljs-keyword">const</span> out = <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;r2&#x27;</span>, [<span class="hljs-string">&#x27;-q&#x27;</span>, <span class="hljs-string">&#x27;-c&#x27;</span>, <span class="hljs-string">`/x <span class="hljs-subst">$&#123;hexBytes&#125;</span>`</span>, binaryPath], &#123; <span class="hljs-attr">timeout</span>: <span class="hljs-number">30000</span> &#125;).<span class="hljs-property">stdout</span>;<br>    <span class="hljs-keyword">const</span> match = out.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/0x([0-9a-f]+)/i</span>);<br>    <span class="hljs-keyword">return</span> match ? <span class="hljs-title class_">Number</span>.<span class="hljs-built_in">parseInt</span>(match[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>) : <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">extractSlices</span>(<span class="hljs-params">frameworkPath</span>) &#123;<br>    <span class="hljs-keyword">const</span> dir = path.<span class="hljs-title function_">join</span>(os.<span class="hljs-title function_">tmpdir</span>(), <span class="hljs-string">&#x27;opencode&#x27;</span>, <span class="hljs-string">&#x27;pf_crack&#x27;</span>);<br>    fs.<span class="hljs-title function_">mkdirSync</span>(dir, &#123; <span class="hljs-attr">recursive</span>: <span class="hljs-literal">true</span> &#125;);<br><br>    <span class="hljs-keyword">const</span> arm64 = path.<span class="hljs-title function_">join</span>(dir, <span class="hljs-string">&#x27;PathFinderLicense.arm64&#x27;</span>);<br>    <span class="hljs-keyword">const</span> x86_64 = path.<span class="hljs-title function_">join</span>(dir, <span class="hljs-string">&#x27;PathFinderLicense.x86_64&#x27;</span>);<br><br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;lipo&#x27;</span>, [<span class="hljs-string">&#x27;-thin&#x27;</span>, <span class="hljs-string">&#x27;arm64&#x27;</span>, frameworkPath, <span class="hljs-string">&#x27;-output&#x27;</span>, arm64]);<br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;lipo&#x27;</span>, [<span class="hljs-string">&#x27;-thin&#x27;</span>, <span class="hljs-string">&#x27;x86_64&#x27;</span>, frameworkPath, <span class="hljs-string">&#x27;-output&#x27;</span>, x86_64]);<br><br>    <span class="hljs-keyword">if</span> (!fs.<span class="hljs-title function_">existsSync</span>(arm64) || !fs.<span class="hljs-title function_">existsSync</span>(x86_64)) &#123;<br>        <span class="hljs-title function_">fail</span>(<span class="hljs-string">&#x27;无法提取架构切片&#x27;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> &#123; arm64, x86_64 &#125;;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">buildPatches</span>(<span class="hljs-params">frameworkPath</span>) &#123;<br>    <span class="hljs-keyword">const</span> offsets = <span class="hljs-title function_">parseArchOffsets</span>(frameworkPath);<br>    <span class="hljs-keyword">const</span> slices = <span class="hljs-title function_">extractSlices</span>(frameworkPath);<br><br>    <span class="hljs-keyword">const</span> arm64IsActive = <span class="hljs-title function_">r2FindMethod</span>(slices.<span class="hljs-property">arm64</span>, <span class="hljs-string">&#x27;isActive&#x27;</span>);<br>    <span class="hljs-keyword">const</span> arm64StatusBase = <span class="hljs-title function_">r2FindPattern</span>(slices.<span class="hljs-property">arm64</span>, <span class="hljs-string">&#x27;9c 48 00 94 60 01 00 34&#x27;</span>);<br>    <span class="hljs-keyword">const</span> x86IsActive = <span class="hljs-title function_">r2FindMethod</span>(slices.<span class="hljs-property">x86_64</span>, <span class="hljs-string">&#x27;isActive&#x27;</span>);<br>    <span class="hljs-keyword">const</span> x86StatusBase = <span class="hljs-title function_">r2FindPattern</span>(slices.<span class="hljs-property">x86_64</span>, <span class="hljs-string">&#x27;41 ff d5 84 c0 74&#x27;</span>);<br><br>    <span class="hljs-keyword">if</span> (arm64IsActive == <span class="hljs-literal">null</span> || arm64StatusBase == <span class="hljs-literal">null</span> || x86IsActive == <span class="hljs-literal">null</span> || x86StatusBase == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-title function_">fail</span>(<span class="hljs-string">&#x27;未找到完整补丁点，可能版本不兼容&#x27;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> [<br>        &#123;<br>            <span class="hljs-attr">arch</span>: <span class="hljs-string">&#x27;arm64&#x27;</span>,<br>            <span class="hljs-attr">desc</span>: <span class="hljs-string">&#x27;isActive -&gt; true&#x27;</span>,<br>            <span class="hljs-attr">offset</span>: offsets.<span class="hljs-property">arm64</span> + arm64IsActive,<br>            <span class="hljs-attr">original</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0xF6</span>, <span class="hljs-number">0x57</span>, <span class="hljs-number">0xBD</span>, <span class="hljs-number">0xA9</span>, <span class="hljs-number">0xF4</span>, <span class="hljs-number">0x4F</span>, <span class="hljs-number">0x01</span>, <span class="hljs-number">0xA9</span>]),<br>            <span class="hljs-attr">patched</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x20</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x80</span>, <span class="hljs-number">0x52</span>, <span class="hljs-number">0xC0</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x5F</span>, <span class="hljs-number">0xD6</span>])<br>        &#125;,<br>        &#123;<br>            <span class="hljs-attr">arch</span>: <span class="hljs-string">&#x27;arm64&#x27;</span>,<br>            <span class="hljs-attr">desc</span>: <span class="hljs-string">&#x27;status check -&gt; nop&#x27;</span>,<br>            <span class="hljs-attr">offset</span>: offsets.<span class="hljs-property">arm64</span> + arm64StatusBase + <span class="hljs-number">4</span>,<br>            <span class="hljs-attr">original</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x60</span>, <span class="hljs-number">0x01</span>, <span class="hljs-number">0x00</span>, <span class="hljs-number">0x34</span>]),<br>            <span class="hljs-attr">patched</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x1F</span>, <span class="hljs-number">0x20</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0xD5</span>])<br>        &#125;,<br>        &#123;<br>            <span class="hljs-attr">arch</span>: <span class="hljs-string">&#x27;x86_64&#x27;</span>,<br>            <span class="hljs-attr">desc</span>: <span class="hljs-string">&#x27;isActive -&gt; true&#x27;</span>,<br>            <span class="hljs-attr">offset</span>: offsets.<span class="hljs-property">x86_64</span> + x86IsActive,<br>            <span class="hljs-attr">original</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x55</span>, <span class="hljs-number">0x48</span>, <span class="hljs-number">0x89</span>, <span class="hljs-number">0xE5</span>]),<br>            <span class="hljs-attr">patched</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x31</span>, <span class="hljs-number">0xC0</span>, <span class="hljs-number">0xFF</span>, <span class="hljs-number">0xC0</span>, <span class="hljs-number">0xC3</span>])<br>        &#125;,<br>        &#123;<br>            <span class="hljs-attr">arch</span>: <span class="hljs-string">&#x27;x86_64&#x27;</span>,<br>            <span class="hljs-attr">desc</span>: <span class="hljs-string">&#x27;status check -&gt; nop&#x27;</span>,<br>            <span class="hljs-attr">offset</span>: offsets.<span class="hljs-property">x86_64</span> + x86StatusBase + <span class="hljs-number">5</span>,<br>            <span class="hljs-attr">original</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x74</span>]),<br>            <span class="hljs-attr">patched</span>: <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">0x90</span>, <span class="hljs-number">0x90</span>])<br>        &#125;<br>    ];<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">patch</span>(<span class="hljs-params">appPath</span>) &#123;<br>    <span class="hljs-keyword">const</span> frameworkPath = <span class="hljs-title function_">getFrameworkPath</span>(appPath);<br>    <span class="hljs-keyword">const</span> backupPath = <span class="hljs-string">`<span class="hljs-subst">$&#123;frameworkPath&#125;</span>.bak`</span>;<br><br>    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(backupPath)) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;⚠️  检测到已有备份，先恢复原始文件后重新 patch&#x27;</span>);<br>        fs.<span class="hljs-title function_">copyFileSync</span>(backupPath, frameworkPath);<br>        fs.<span class="hljs-title function_">rmSync</span>(backupPath, &#123; <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span> &#125;);<br>    &#125;<br><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;🔍 查找补丁点...&#x27;</span>);<br>    <span class="hljs-keyword">const</span> patches = <span class="hljs-title function_">buildPatches</span>(frameworkPath);<br>    <span class="hljs-keyword">let</span> binary = fs.<span class="hljs-title function_">readFileSync</span>(frameworkPath);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> patch <span class="hljs-keyword">of</span> patches) &#123;<br>        <span class="hljs-keyword">const</span> current = binary.<span class="hljs-title function_">slice</span>(patch.<span class="hljs-property">offset</span>, patch.<span class="hljs-property">offset</span> + patch.<span class="hljs-property">original</span>.<span class="hljs-property">length</span>);<br>        <span class="hljs-keyword">if</span> (!current.<span class="hljs-title function_">equals</span>(patch.<span class="hljs-property">original</span>)) &#123;<br>            <span class="hljs-title function_">fail</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;patch.arch&#125;</span> <span class="hljs-subst">$&#123;patch.desc&#125;</span> 字节不匹配 @ 0x<span class="hljs-subst">$&#123;patch.offset.toString(<span class="hljs-number">16</span>)&#125;</span>`</span>);<br>        &#125;<br>        patch.<span class="hljs-property">patched</span>.<span class="hljs-title function_">copy</span>(binary, patch.<span class="hljs-property">offset</span>);<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`✅ <span class="hljs-subst">$&#123;patch.arch&#125;</span> <span class="hljs-subst">$&#123;patch.desc&#125;</span> @ 0x<span class="hljs-subst">$&#123;patch.offset.toString(<span class="hljs-number">16</span>)&#125;</span>`</span>);<br>    &#125;<br><br>    fs.<span class="hljs-title function_">copyFileSync</span>(frameworkPath, backupPath);<br>    fs.<span class="hljs-title function_">writeFileSync</span>(frameworkPath, binary);<br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;killall&#x27;</span>, [<span class="hljs-string">&#x27;Path Finder&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;codesign&#x27;</span>, [<span class="hljs-string">&#x27;--force&#x27;</span>, <span class="hljs-string">&#x27;--deep&#x27;</span>, <span class="hljs-string">&#x27;--sign&#x27;</span>, <span class="hljs-string">&#x27;-&#x27;</span>, appPath], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;🎉 Patch 完成&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">rollback</span>(<span class="hljs-params">appPath</span>) &#123;<br>    <span class="hljs-keyword">const</span> frameworkPath = <span class="hljs-title function_">getFrameworkPath</span>(appPath);<br>    <span class="hljs-keyword">const</span> backupPath = <span class="hljs-string">`<span class="hljs-subst">$&#123;frameworkPath&#125;</span>.bak`</span>;<br><br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;killall&#x27;</span>, [<span class="hljs-string">&#x27;Path Finder&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br><br>    <span class="hljs-keyword">if</span> (!fs.<span class="hljs-title function_">existsSync</span>(backupPath)) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;⚠️  未找到备份文件，无需回滚&#x27;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    fs.<span class="hljs-title function_">copyFileSync</span>(backupPath, frameworkPath);<br>    fs.<span class="hljs-title function_">rmSync</span>(backupPath, &#123; <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span> &#125;);<br>    <span class="hljs-title function_">run</span>(<span class="hljs-string">&#x27;codesign&#x27;</span>, [<span class="hljs-string">&#x27;--force&#x27;</span>, <span class="hljs-string">&#x27;--deep&#x27;</span>, <span class="hljs-string">&#x27;--sign&#x27;</span>, <span class="hljs-string">&#x27;-&#x27;</span>, appPath], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;🎉 回滚完成&#x27;</span>);<br>&#125;<br><br>(<span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> appPath = <span class="hljs-title function_">resolveAppPath</span>();<br>    <span class="hljs-title function_">requireR2</span>();<br><br>    <span class="hljs-keyword">if</span> (process.<span class="hljs-property">argv</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;--rollback&#x27;</span>)) &#123;<br>        <span class="hljs-title function_">rollback</span>(appPath);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-title function_">patch</span>(appPath);<br>&#125;)();<br></code></pre></td></tr></table></figure>
+</details>
+<blockquote>
+<p>仅做技术交流之用，请支持正版软件</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%80%86%E5%90%91/" class="category-chain-item">逆向</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>记一次Path Finder macOS版破解</div>
+      <div>https://www.letr7.com/2026/06/15/cracking-pathfinder-macos/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>letr</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年6月15日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2026年9月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/06/23/letcode-2/" title="从零开始的 Agent 开发：灵活 or 可控？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从零开始的 Agent 开发：灵活 or 可控？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/29/cracking-typora-macos/" title="记一次Typora macOS版破解">
+                        <span class="hidden-mobile">记一次Typora macOS版破解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"letr007/letr007.github.io","repo-id":"R_kgDOMoX3AA","category":"Announcements","category-id":"DIC_kwDOMoX3AM4C55A-","theme-light":"light","theme-dark":"dark_protanopia","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark_protanopia';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-love"></i> <a href="https://icp.gov.moe/?keyword=20250077" target="_blank">萌ICP备20250077号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+    <script>
+      if (screen.width >= 768) {
+        var s = document.createElement('script');
+        s.src = 'https://fastly.jsdelivr.net/npm/live2d-widgets@latest/dist/autoload.js';
+        document.body.appendChild(s);
+      }
+    </script>
+    <style>
+      /* 强制修正：无论脚本在哪加载，容器必须固定在窗口之上 */
+      #waifu {
+        position: fixed !important;
+        left: 20px !important;
+        bottom: 20px !important;
+        z-index: 999999 !important; /* 给一个极高的层级，超过 Fluid 的正文区 */
+        line-height: 0;
+      }
+      /* 修正工具栏被压在下面的问题 */
+      .waifu-tool {
+        top: 20px !important; 
+      }
+    </style>
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

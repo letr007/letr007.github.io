@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+    <link rel="canonical" href="https://www.letr7.com/2026/04/21/cracking-staruml/"/>
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="letr">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="0x00 起因 最近要使用StarUML绘制一些类图，默认选择了试用装，但是在导出后发现，图片居然满屏的UNREGISTERED水印！ 试用装居然不让我正常导出，可恶…  注：本文仅学习交流技术原理，请购买正版许可证支持正版  0x01 Step1 定位到该app所在文件夹 123456789101112StarUML&#x2F;├── locales├── resources&#x2F;│   ├── app.as">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次StarUML破解">
+<meta property="og:url" content="https://www.letr7.com/2026/04/21/cracking-staruml/index.html">
+<meta property="og:site_name" content="Letr的个人博客(～￣▽￣)～">
+<meta property="og:description" content="0x00 起因 最近要使用StarUML绘制一些类图，默认选择了试用装，但是在导出后发现，图片居然满屏的UNREGISTERED水印！ 试用装居然不让我正常导出，可恶…  注：本文仅学习交流技术原理，请购买正版许可证支持正版  0x01 Step1 定位到该app所在文件夹 123456789101112StarUML&#x2F;├── locales├── resources&#x2F;│   ├── app.as">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.letr7.com/img/staruml-license.png">
+<meta property="article:published_time" content="2026-04-21T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-21T09:54:01.195Z">
+<meta property="article:author" content="Letr">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.letr7.com/img/staruml-license.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>记一次StarUML破解 - Letr的个人博客(～￣▽￣)～</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.letr7.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Letr&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="记一次StarUML破解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        letr
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-21 08:00" pubdate>
+          2026年4月21日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">记一次StarUML破解</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2026-04-21T09:54:01+00:00
+                  
+                  
+
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="0x00-起因">0x00 起因</h2>
+<p>最近要使用StarUML绘制一些类图，默认选择了试用装，但是在导出后发现，图片居然满屏的<code>UNREGISTERED</code>水印！</p>
+<p>试用装居然不让我正常导出，可恶…</p>
+<blockquote>
+<p>注：本文仅学习交流技术原理，请购买正版许可证支持正版</p>
+</blockquote>
+<h2 id="0x01-Step1">0x01 Step1</h2>
+<p>定位到该app所在文件夹</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs text">StarUML/<br>├── locales<br>├── resources/<br>│   ├── app.asar<br>│   ├── app-update.yml<br>│   ├── elevate.exe<br>│   └── mdj.ico<br>├── StarUML.exe<br>├── Uninstall StarUML.exe<br>├── LICENSE.electron.txt<br>├── LICENSES.chromium.html<br>└── ...<br></code></pre></td></tr></table></figure>
+<p>观察文件结构不难看出，这是一个基于<code>electron</code>框架构建的app</p>
+<p>好东西都在app.asar中，我们先进行解压</p>
+<p>此处使用<code>npm</code>安装的<code>asar</code>工具</p>
+<p>安装命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install -g asar<br></code></pre></td></tr></table></figure>
+<p>先将app.asar复制到单独文件夹，然后进行解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">asar extract app.asar ./app<br></code></pre></td></tr></table></figure>
+<p>然后就发现，这个包居然没有任何混淆！源码带注释就这么水灵灵的放在眼前</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">app/<br>├── package.json<br>├── src/<br>│   ├── core/<br>│   │   └── ...<br>│   ├── dialogs/<br>│   │   └── ...<br>│   ├── engine/<br>│   │   └── ...<br>│   ├── ...<br>│   ├── index.js<br>│   ├── strings.js<br>│   └── app-context.js<br>├── resources/<br>│   ├── assents/<br>│   │   └── ...<br>│   └── ...<br>├── node_modules/<br>│   └── ...<br>└── extensions/<br>    └── ...<br></code></pre></td></tr></table></figure>
+<h2 id="0x02-Step2">0x02 Step2</h2>
+<p>来到src文件夹下，注意到在src/dialogs/下有个license-activation-dialog.js</p>
+<p>从名字不难看出，这应该是有关许可证的dialog的部分</p>
+<p>其大致逻辑为从store里面读取相关状态，然后渲染到界面，提供激活/反激活的UI入口，还有一些激活辅助项</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">updateDialog</span>(<span class="hljs-params">$dlg</span>) &#123;<br>  <span class="hljs-keyword">await</span> app.<span class="hljs-property">licenseStore</span>.<span class="hljs-title function_">fetch</span>(); <span class="hljs-comment">// 这是什么?</span><br>  <span class="hljs-keyword">const</span> licenseStatus = app.<span class="hljs-property">licenseStore</span>.<span class="hljs-title function_">getLicenseStatus</span>();<br><br>  <span class="hljs-keyword">const</span> $sectionTrialNotExpired = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.trial-not-expired&quot;</span>);<br>  <span class="hljs-keyword">const</span> $sectionTrialExpired = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.trial-expired&quot;</span>);<br>  <span class="hljs-keyword">const</span> $sectionLicenseActivated = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.license-activated&quot;</span>);<br>  <span class="hljs-keyword">const</span> $sectionLicenseNotActivated = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.license-not-activated&quot;</span>);<br>  <span class="hljs-keyword">const</span> $trialDaysLeft = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.trial-days-left&quot;</span>);<br>  <span class="hljs-keyword">const</span> $activeStatus = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.active-status&quot;</span>);<br>  <span class="hljs-keyword">const</span> $productDisplayName = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.product-display-name&quot;</span>);<br>  <span class="hljs-keyword">const</span> $licenseHolderName = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.license-holder-name&quot;</span>);<br>  <span class="hljs-keyword">const</span> $deviceId = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.device-id&quot;</span>);<br><br>  $sectionTrialNotExpired.<span class="hljs-title function_">hide</span>();<br>  $sectionTrialExpired.<span class="hljs-title function_">hide</span>();<br>  $sectionLicenseActivated.<span class="hljs-title function_">hide</span>();<br>  $sectionLicenseNotActivated.<span class="hljs-title function_">hide</span>();<br><br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">showDialog</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">await</span> app.<span class="hljs-property">licenseStore</span>.<span class="hljs-title function_">fetch</span>(); <span class="hljs-comment">// 这里也有!</span><br><br>  <span class="hljs-keyword">const</span> context = &#123;<br>    <span class="hljs-title class_">Strings</span>: <span class="hljs-title class_">Strings</span>,<br>    <span class="hljs-attr">metadata</span>: <span class="hljs-variable language_">global</span>.<span class="hljs-property">app</span>.<span class="hljs-property">metadata</span>,<br>  &#125;;<br>  <span class="hljs-keyword">const</span> dialog = app.<span class="hljs-property">dialogs</span>.<span class="hljs-title function_">showModalDialogUsingTemplate</span>(<br>    <span class="hljs-title class_">Mustache</span>.<span class="hljs-title function_">render</span>(licenseActivationDialogTemplate, context),<br>  );<br><br>  <span class="hljs-keyword">const</span> $dlg = dialog.<span class="hljs-title function_">getElement</span>();<br>  <span class="hljs-keyword">const</span> $buyButton = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.buy-button&quot;</span>);<br>  <span class="hljs-keyword">const</span> $licenseKey = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.license-key&quot;</span>);<br>  <span class="hljs-keyword">const</span> $activateButton = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.activate-button&quot;</span>);<br>  <span class="hljs-keyword">const</span> $deactivateButton = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.deactivate-button&quot;</span>);<br>  <span class="hljs-keyword">const</span> $copyDeviceIdButton = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.copy-device-id-button&quot;</span>);<br>  <span class="hljs-keyword">const</span> $licenseManagerButton = $dlg.<span class="hljs-title function_">find</span>(<span class="hljs-string">&quot;.license-manager-button&quot;</span>);<br>  <span class="hljs-keyword">await</span> <span class="hljs-title function_">updateDialog</span>($dlg);<br><br>  $activateButton.<span class="hljs-title function_">click</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    ...<br>  &#125;);<br><br>  $deactivateButton.<span class="hljs-title function_">click</span>(<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    ...<br>  &#125;);<br><br>  ...<br>  <span class="hljs-keyword">return</span> dialog;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>读一下相关代码，在进行UI相关渲染前都调用了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">await</span> app.<span class="hljs-property">licenseStore</span>.<span class="hljs-title function_">fetch</span>();<br></code></pre></td></tr></table></figure>
+<p>再看看其他部分，通过搜索<code>UNREGISTERED</code>找到了渲染水印逻辑所在，位于diagram-export.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> licenseStatus = app.<span class="hljs-property">licenseStore</span>.<span class="hljs-title function_">getLicenseStatus</span>();<br>  <span class="hljs-comment">// Draw watermark if application is not registered</span><br>  <span class="hljs-keyword">if</span> (licenseStatus.<span class="hljs-property">trial</span>) &#123;<br>    diagram.<span class="hljs-title function_">drawWatermark</span>(<br>      canvas,<br>      canvasElement.<span class="hljs-property">width</span>,<br>      canvasElement.<span class="hljs-property">height</span>,<br>      <span class="hljs-number">70</span>,<br>      <span class="hljs-number">12</span>,<br>      <span class="hljs-string">&quot;UNREGISTERED&quot;</span>,<br>    );<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (licenseStatus.<span class="hljs-property">edition</span> !== <span class="hljs-string">&quot;PRO&quot;</span>) &#123;<br>    <span class="hljs-keyword">const</span> dgmType = diagram.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isProDiagram</span>(dgmType)) &#123;<br>      diagram.<span class="hljs-title function_">drawWatermark</span>(<br>        canvas,<br>        canvasElement.<span class="hljs-property">width</span>,<br>        canvasElement.<span class="hljs-property">height</span>,<br>        <span class="hljs-number">45</span>,<br>        <span class="hljs-number">12</span>,<br>        <span class="hljs-string">&quot;PRO ONLY&quot;</span>,<br>      );<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+<p>这表明，app的大部分地方似乎都依赖<code>app.licenseStore</code>来验证许可证状态</p>
+<p>搜索一下<code>licenseStore</code>，发现在license-store.js中导出</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title class_">LicenseStore</span>;<br></code></pre></td></tr></table></figure>
+<p>进一步查看这个文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> &#123; ipcRenderer &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;electron&quot;</span>);<br><span class="hljs-keyword">const</span> &#123; <span class="hljs-title class_">EventEmitter</span> &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;events&quot;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-title class_">LicenseActivationDialog</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;../dialogs/license-activation-dialog&quot;</span>);<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">LicenseStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">EventEmitter</span> &#123;<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">super</span>();<br>    <span class="hljs-comment">// 定义了一个license状态</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span> = &#123;<br>      <span class="hljs-attr">activated</span>: <span class="hljs-literal">false</span>,<br>      <span class="hljs-attr">name</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">product</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">edition</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">productDisplayName</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">deviceId</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">licenseKey</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">activationCode</span>: <span class="hljs-literal">null</span>,<br>      <span class="hljs-attr">trial</span>: <span class="hljs-literal">false</span>,<br>      <span class="hljs-attr">trialDaysLeft</span>: <span class="hljs-number">0</span>,<br>    &#125;;<br>  &#125;<br><br>  <span class="hljs-comment">// 从服务器获取许可证状态</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> licenseStatus = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<br>      <span class="hljs-string">&quot;license.get-license-status&quot;</span>,<br>    );<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span> = licenseStatus;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;statusChanged&quot;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span>);<br>  &#125;<br><br>  <span class="hljs-comment">// 获取设备ID的方法</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">getDeviceId</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">const</span> deviceId = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<span class="hljs-string">&quot;license.get-device-id&quot;</span>);<br>      ...<br>  &#125;<br><br>  <span class="hljs-comment">// 激活方法</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">activate</span>(<span class="hljs-params">licenseKey</span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<span class="hljs-string">&quot;license.activate&quot;</span>, licenseKey);<br>      <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">success</span>) &#123;<br>        app.<span class="hljs-property">toast</span>.<span class="hljs-title function_">error</span>(result.<span class="hljs-property">message</span> || <span class="hljs-string">&quot;Activation failed&quot;</span>);<br>      &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>      app.<span class="hljs-property">toast</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;Activation failed&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>  &#125;<br><br>  <span class="hljs-comment">// 反激活方法</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">deactivate</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<span class="hljs-string">&quot;license.deactivate&quot;</span>);<br>      <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">success</span>) &#123;<br>        app.<span class="hljs-property">toast</span>.<span class="hljs-title function_">error</span>(result.<span class="hljs-property">message</span> || <span class="hljs-string">&quot;Deactivation failed&quot;</span>);<br>      &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>      app.<span class="hljs-property">toast</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;Deactivation failed&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>  &#125;<br><br>  <span class="hljs-comment">// 验证方法</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">validate</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<span class="hljs-string">&quot;license.validate&quot;</span>);<br>    <span class="hljs-keyword">const</span> licenseStatus = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<br>      <span class="hljs-string">&quot;license.get-license-status&quot;</span>,<br>    );<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span> = licenseStatus;<br>    <span class="hljs-keyword">return</span> result;<br>  &#125;<br><br>  <span class="hljs-comment">// 获取许可证状态</span><br>  <span class="hljs-title function_">getLicenseStatus</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span>;<br>  &#125;<br><br>  <span class="hljs-comment">// 检查试用状态</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">checkTrialMode</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> licenseStatus = <span class="hljs-keyword">await</span> ipcRenderer.<span class="hljs-title function_">invoke</span>(<br>      <span class="hljs-string">&quot;license.get-license-status&quot;</span>,<br>    );<br>    <span class="hljs-keyword">if</span> (licenseStatus.<span class="hljs-property">trial</span>) &#123;<br>      <span class="hljs-title class_">LicenseActivationDialog</span>.<span class="hljs-title function_">showDialog</span>();<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// 初始化方法</span><br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">htmlReady</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>      <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">validate</span>();<br>      <span class="hljs-keyword">if</span> (!result.<span class="hljs-property">success</span>) &#123;<br>        app.<span class="hljs-property">toast</span>.<span class="hljs-title function_">error</span>(result.<span class="hljs-property">message</span> || <span class="hljs-string">&quot;License validation failed&quot;</span>);<br>      &#125;<br>      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkTrialMode</span>();<br>      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>    &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;License validation failed&quot;</span>);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = <span class="hljs-title class_">LicenseStore</span>;<br></code></pre></td></tr></table></figure>
+<p>由此可知，这似乎是一个中间层，是renderer侧状态门面，通过IPC invoke调用主进程的license handler来取得许可证相关信息，并传递给UI层</p>
+<p>到这里已经足够，我们不需要知道主进程的license handler具体是怎么与服务器交互取得注册信息的</p>
+<p>只需要在这里插桩，拦截所有IPC请求，返回我们的虚假许可证信息给renderer，即可绕过绝大部分许可证限制</p>
+<h2 id="0x03-Step3">0x03 Step3</h2>
+<p>第一步就是定义一个fake license信息，注释掉构造函数中的原初始化赋值，换成我们的fake license</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span> = &#123;<br>      <span class="hljs-attr">activated</span>: <span class="hljs-literal">true</span>,                      <span class="hljs-comment">// 激活状态</span><br>      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;User&quot;</span>,                         <span class="hljs-comment">// 用户名称</span><br>      <span class="hljs-attr">product</span>: <span class="hljs-string">&quot;staruml-v7&quot;</span>,                <span class="hljs-comment">// 产品类型</span><br>      <span class="hljs-attr">edition</span>: <span class="hljs-string">&quot;PRO&quot;</span>,                       <span class="hljs-comment">// 订阅类型</span><br>      <span class="hljs-attr">productDisplayName</span>: <span class="hljs-string">&quot;StarUML v7.0.0&quot;</span>, <span class="hljs-comment">// 产品展示名称</span><br>      <span class="hljs-attr">deviceId</span>: <span class="hljs-string">&quot;unlimited-device&quot;</span>,         <span class="hljs-comment">// 设备ID</span><br>      <span class="hljs-attr">licenseKey</span>: <span class="hljs-string">&quot;key&quot;</span>,                    <span class="hljs-comment">// 许可证密钥</span><br>      <span class="hljs-attr">activationCode</span>: <span class="hljs-string">&quot;code&quot;</span>,               <span class="hljs-comment">// 激活码</span><br>      <span class="hljs-attr">trial</span>: <span class="hljs-literal">false</span>,                         <span class="hljs-comment">// 是否试用</span><br>      <span class="hljs-attr">trialDaysLeft</span>: <span class="hljs-number">0</span>,                     <span class="hljs-comment">// 剩余试用天数</span><br>    &#125;;<br></code></pre></td></tr></table></figure>
+<p>然后是处理那些许可证相关方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// const licenseStatus = await ipcRenderer.invoke(</span><br>    <span class="hljs-comment">//   &quot;license.get-license-status&quot;,</span><br>    <span class="hljs-comment">// );</span><br>    <span class="hljs-comment">// this.licenseStatus = licenseStatus;</span><br>    <span class="hljs-comment">// 不再通过IPC查询，而是直接返回虚假许可</span><br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&quot;statusChanged&quot;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span>);<br>  &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">getDeviceId</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-comment">// const deviceId = await ipcRenderer.invoke(&quot;license.get-device-id&quot;);</span><br>      <span class="hljs-comment">// 同样注释掉IPC调用，只返回虚假信息</span><br>      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span>.<span class="hljs-property">deviceId</span>;<br>    &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">licenseStatus</span>.<span class="hljs-property">deviceId</span>;<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">activate</span>(<span class="hljs-params">licenseKey</span>) &#123;<br>    <span class="hljs-comment">// try &#123;</span><br>    <span class="hljs-comment">//   const result = await ipcRenderer.invoke(&quot;license.activate&quot;, licenseKey);</span><br>    <span class="hljs-comment">//   if (!result.success) &#123;</span><br>    <span class="hljs-comment">//     app.toast.error(result.message || &quot;Activation failed&quot;);</span><br>    <span class="hljs-comment">//   &#125;</span><br>    <span class="hljs-comment">// &#125; catch (err) &#123;</span><br>    <span class="hljs-comment">//   console.error(err);</span><br>    <span class="hljs-comment">//   app.toast.error(&quot;Activation failed&quot;);</span><br>    <span class="hljs-comment">// &#125;</span><br>    <span class="hljs-comment">// 不要</span><br>    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>  &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">deactivate</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// try &#123;</span><br>    <span class="hljs-comment">//   const result = await ipcRenderer.invoke(&quot;license.deactivate&quot;);</span><br>    <span class="hljs-comment">//   if (!result.success) &#123;</span><br>    <span class="hljs-comment">//     app.toast.error(result.message || &quot;Deactivation failed&quot;);</span><br>    <span class="hljs-comment">//   &#125;</span><br>    <span class="hljs-comment">// &#125; catch (err) &#123;</span><br>    <span class="hljs-comment">//   console.error(err);</span><br>    <span class="hljs-comment">//   app.toast.error(&quot;Deactivation failed&quot;);</span><br>    <span class="hljs-comment">// &#125;</span><br>    <span class="hljs-comment">// 这里也不要</span><br>    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">fetch</span>();<br>  &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">validate</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// const result = await ipcRenderer.invoke(&quot;license.validate&quot;);</span><br>    <span class="hljs-comment">// const licenseStatus = await ipcRenderer.invoke(</span><br>    <span class="hljs-comment">//   &quot;license.get-license-status&quot;,</span><br>    <span class="hljs-comment">// );</span><br>    <span class="hljs-comment">// this.licenseStatus = licenseStatus;</span><br>    <span class="hljs-comment">// return result;</span><br>    <span class="hljs-comment">// 也不要，返回虚假信息</span><br>    <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;License valid&quot;</span> &#125;;<br>  &#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-title function_">checkTrialMode</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// const licenseStatus = await ipcRenderer.invoke(</span><br>    <span class="hljs-comment">//   &quot;license.get-license-status&quot;,</span><br>    <span class="hljs-comment">// );</span><br>    <span class="hljs-comment">// if (licenseStatus.trial) &#123;</span><br>    <span class="hljs-comment">//   LicenseActivationDialog.showDialog();</span><br>    <span class="hljs-comment">// &#125;</span><br>    <span class="hljs-comment">// 这里也不要</span><br>  &#125;<br></code></pre></td></tr></table></figure>
+<p>然后打包回去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">asar pack ./app app.asar<br></code></pre></td></tr></table></figure>
+<p>复制并替换原app.asar，启动StarUML，查看激活状态</p>
+<p><img src="/img/staruml-license.png" srcset="/img/loading.gif" lazyload alt="许可证界面"></p>
+<h2 id="0x04-深挖">0x04 深挖</h2>
+<p>在翻阅相关资料，并且继续分析后发现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs js">ipcMain.<span class="hljs-title function_">handle</span>(<span class="hljs-string">&quot;license.get-device-id&quot;</span>, <span class="hljs-title function_">async</span> (event) =&gt; &#123;<br>      <span class="hljs-keyword">const</span> deviceId = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getDeviceId</span>();<br>      <span class="hljs-keyword">return</span> deviceId;<br>    &#125;);<br><br>    ipcMain.<span class="hljs-title function_">handle</span>(<span class="hljs-string">&quot;license.activate&quot;</span>, <span class="hljs-title function_">async</span> (event, licenseKey) =&gt; &#123;<br>      <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-title function_">remoteActivate</span>(licenseKey);<br>      <span class="hljs-keyword">return</span> result;<br>    &#125;);<br><br>    ipcMain.<span class="hljs-title function_">handle</span>(<span class="hljs-string">&quot;license.deactivate&quot;</span>, <span class="hljs-title function_">async</span> (event) =&gt; &#123;<br>      <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-title function_">remoteDeactivate</span>();<br>      <span class="hljs-keyword">return</span> result;<br>    &#125;);<br><br>    ipcMain.<span class="hljs-title function_">handle</span>(<span class="hljs-string">&quot;license.validate&quot;</span>, <span class="hljs-title function_">async</span> (event) =&gt; &#123;<br>      <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> <span class="hljs-title function_">localValidate</span>();<br>      <span class="hljs-keyword">if</span> (result.<span class="hljs-property">success</span>) &#123;<br>        result = <span class="hljs-keyword">await</span> <span class="hljs-title function_">remoteValidate</span>();<br>      &#125;<br>      <span class="hljs-keyword">return</span> result;<br>    &#125;);<br><br>    ipcMain.<span class="hljs-title function_">handle</span>(<span class="hljs-string">&quot;license.get-license-status&quot;</span>, <span class="hljs-title function_">async</span> (event) =&gt; &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-title function_">getLicenseStatus2</span>();<br>    &#125;);<br></code></pre></td></tr></table></figure>
+<p>这些方法最终指向license-client.js</p>
+<p>分析license-client.js发现了一些有趣的东西</p>
+<p>试用的信息存储在lib.so里面(win下面有个.so难道不可疑吗…)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_TRIAL_MODE_ENABLED</span> = <span class="hljs-literal">true</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_TRIAL_TIMESTAMP_FILE_NAME</span> = <span class="hljs-string">&quot;lib.so&quot;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_TRIAL_MODE_DAYS</span> = <span class="hljs-number">30</span>; <span class="hljs-comment">// negative for infinite, positive for days left</span><br></code></pre></td></tr></table></figure>
+<p>神秘硬编码key</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_CRYPTO_KEY</span> = <span class="hljs-string">&quot;y0JMc9mvB1uvIi82GhdMJQXzVJxl+1Lc0RqZqWaQvx0=&quot;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_SERVER_URL</span> =<br>  <span class="hljs-string">&quot;https://dev.staruml-io-astro.pages.dev/api/license-manager&quot;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">LICENSE_FILE_NAME</span> = <span class="hljs-string">&quot;activation.key&quot;</span>;<br></code></pre></td></tr></table></figure>
+<p>解码后为</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">CB424C73D9AF075BAF222F361A174C2505F3549C65FB52DCD11A99A96690BF1D<br></code></pre></td></tr></table></figure>
+<p>此key用于下文的AES解密</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Import AES key from Base64 string</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">importAESKey</span>(<span class="hljs-params">base64Key</span>) &#123;<br>  <span class="hljs-keyword">const</span> keyBuffer = <span class="hljs-title function_">base64ToArrayBuffer</span>(base64Key);<br>  <span class="hljs-keyword">const</span> imported = <span class="hljs-keyword">await</span> crypto.<span class="hljs-property">subtle</span>.<span class="hljs-title function_">importKey</span>(<br>    <span class="hljs-string">&quot;raw&quot;</span>,<br>    keyBuffer,<br>    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AES-GCM&quot;</span> &#125;,<br>    <span class="hljs-literal">true</span>,<br>    [<span class="hljs-string">&quot;encrypt&quot;</span>, <span class="hljs-string">&quot;decrypt&quot;</span>],<br>  );<br>  <span class="hljs-keyword">return</span> imported;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>离线许可证验证方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">localValidate</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(app.<span class="hljs-title function_">getPath</span>(<span class="hljs-string">&quot;userData&quot;</span>), <span class="hljs-variable constant_">LICENSE_FILE_NAME</span>);<br>    <span class="hljs-keyword">const</span> activationCode = <span class="hljs-keyword">await</span> fs.<span class="hljs-title function_">readFile</span>(filePath, <span class="hljs-string">&quot;utf8&quot;</span>);<br>    <span class="hljs-keyword">const</span> decoded = <span class="hljs-keyword">await</span> <span class="hljs-title function_">decodeActivationCode</span>(activationCode);<br>    <span class="hljs-keyword">const</span> deviceId = <span class="hljs-keyword">await</span> <span class="hljs-title function_">getDeviceId</span>();<br>    <span class="hljs-keyword">const</span> isProductMatched = decoded.<span class="hljs-property">product</span> === <span class="hljs-variable constant_">LICENSE_PRODUCT_ID</span>;<br>    <span class="hljs-keyword">const</span> isDeviceIdMatched =<br>      decoded.<span class="hljs-property">deviceId</span> === <span class="hljs-string">&quot;*&quot;</span> || decoded.<span class="hljs-property">deviceId</span> === deviceId;<br><br>    <span class="hljs-keyword">if</span> (!isProductMatched) &#123;<br>      <span class="hljs-keyword">await</span> <span class="hljs-title function_">checkTrialMode</span>();<br>      <span class="hljs-keyword">await</span> <span class="hljs-title function_">localDeactivate</span>();<br>      <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>,<br>        <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Invalid activation code (product mismatch)&quot;</span>,<br>      &#125;;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (!isDeviceIdMatched) &#123;<br>      <span class="hljs-keyword">await</span> <span class="hljs-title function_">checkTrialMode</span>();<br>      <span class="hljs-keyword">await</span> <span class="hljs-title function_">localDeactivate</span>();<br>      <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>,<br>        <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Invalid activation code (device ID mismatch)&quot;</span>,<br>      &#125;;<br>    &#125;<br><br>    licenseStatus = &#123;<br>      <span class="hljs-attr">activated</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">name</span>: decoded.<span class="hljs-property">name</span>,<br>      <span class="hljs-attr">product</span>: decoded.<span class="hljs-property">product</span>,<br>      <span class="hljs-attr">edition</span>: decoded.<span class="hljs-property">edition</span>,<br>      <span class="hljs-attr">productDisplayName</span>: <span class="hljs-title function_">getProductDisplayName</span>(<br>        decoded.<span class="hljs-property">product</span>,<br>        decoded.<span class="hljs-property">edition</span>,<br>      ),<br>      <span class="hljs-attr">deviceId</span>: decoded.<span class="hljs-property">deviceId</span>,<br>      <span class="hljs-attr">licenseKey</span>: decoded.<span class="hljs-property">licenseKey</span>,<br>      <span class="hljs-attr">activationCode</span>: activationCode,<br>      <span class="hljs-attr">trial</span>: <span class="hljs-literal">false</span>,<br>      <span class="hljs-attr">trialDaysLeft</span>: <span class="hljs-number">0</span>,<br>    &#125;;<br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Local validation successful (activated)&quot;</span>,<br>    &#125;;<br>  &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>    <span class="hljs-comment">// if the file does not exist, assume the license is not activated</span><br>  &#125;<br>  <span class="hljs-keyword">await</span> <span class="hljs-title function_">localDeactivate</span>();<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Local validation successful (not activated)&quot;</span>,<br>  &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从userData/activation.key中读<code>activationCode</code>，用<code>decodeActivationCode()</code>解密出来，取当前机器<code>deviceId</code>，然后进行判断</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">decoded.product === LICENSE_PRODUCT_ID<br>decoded.deviceId === &quot;*&quot; || decoded.deviceId === currentDeviceId<br></code></pre></td></tr></table></figure>
+<p>用来检查本地的激活码是否合法</p>
+<p>一个远程验证方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Validate the activation code with the server.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">remoteValidate</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">const</span> &#123; activated, activationCode, deviceId &#125; = licenseStatus;<br>  <span class="hljs-keyword">if</span> (!activated) &#123;<br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Validation successful (not activated)&quot;</span>,<br>    &#125;;<br>  &#125;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">if</span> (deviceId === <span class="hljs-string">&quot;*&quot;</span>) &#123;<br>      <span class="hljs-comment">// if offline activation, deactivate if the server is reachable</span><br>      <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;LICENSE_SERVER_URL&#125;</span>/ping`</span>, &#123;<br>        <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>      &#125;);<br>      <span class="hljs-keyword">if</span> (response.<span class="hljs-property">ok</span>) &#123;<br>        <span class="hljs-keyword">await</span> <span class="hljs-title function_">localDeactivate</span>();<br>        <span class="hljs-keyword">return</span> &#123;<br>          <span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>,<br>          <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;License deactivated (illegal offline use)&quot;</span>,<br>        &#125;;<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// if online activation, validate the activation code with the server</span><br>      <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;LICENSE_SERVER_URL&#125;</span>/validate`</span>, &#123;<br>        <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">headers</span>: &#123;<br>          <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json&quot;</span>,<br>        &#125;,<br>        <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(&#123;<br>          <span class="hljs-attr">activation_code</span>: activationCode,<br>        &#125;),<br>      &#125;);<br>      <span class="hljs-keyword">if</span> (response.<span class="hljs-property">ok</span>) &#123;<br>        <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> response.<span class="hljs-title function_">json</span>();<br>        <span class="hljs-keyword">if</span> (data.<span class="hljs-property">success</span>) &#123;<br>          <span class="hljs-keyword">const</span> decoded = <span class="hljs-keyword">await</span> <span class="hljs-title function_">decodeValidationCode</span>(data.<span class="hljs-property">validation_code</span>);<br>          <span class="hljs-keyword">if</span> (decoded.<span class="hljs-property">deviceId</span> === deviceId) &#123;<br>            <span class="hljs-keyword">return</span> &#123;<br>              <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>,<br>              <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Validation successful (activated)&quot;</span>,<br>            &#125;;<br>          &#125;<br>        &#125;<br>      &#125;<br>      <span class="hljs-keyword">await</span> <span class="hljs-title function_">localDeactivate</span>();<br>      <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>,<br>        <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;License deactivated by server&quot;</span>,<br>      &#125;;<br>    &#125;<br>  &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>    <span class="hljs-comment">// if server is not accessible, assume the validation is success.</span><br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">message</span>: <span class="hljs-string">&quot;Validation successful (offline)&quot;</span>,<br>    &#125;;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>有个有趣的地方，如果本地已经<code>activated</code>并且<code>deviceId === &quot;*&quot;</code>，即离线激活的情况，会向服务器<code>/ping</code>，如果请求可达则撤销本地的激活状态（还有秋后算账环节）</p>
+</blockquote>
+<p>由此总结远程/离线激活的流程</p>
+<ul>
+<li>取<code>deviceId</code></li>
+<li>POST到<code>/activate</code></li>
+<li>提交<code>device_id</code> <code>license_key</code></li>
+<li>服务器返回<code>activation_code</code></li>
+<li>本地再行校验</li>
+<li>调用<code>localActivate()</code></li>
+</ul>
+<p><code>localActivate()</code>的实现:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">localActivate</span>(<span class="hljs-params">activationCode</span>) &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(app.<span class="hljs-title function_">getPath</span>(<span class="hljs-string">&quot;userData&quot;</span>), <span class="hljs-variable constant_">LICENSE_FILE_NAME</span>);<br>    <span class="hljs-keyword">await</span> fs.<span class="hljs-title function_">writeFile</span>(filePath, activationCode, <span class="hljs-string">&quot;utf8&quot;</span>);<br>  &#125; <span class="hljs-keyword">catch</span> (err) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;Local activation failed:&quot;</span>, err);<br>  &#125;<br>  <span class="hljs-keyword">const</span> decoded = <span class="hljs-keyword">await</span> <span class="hljs-title function_">decodeActivationCode</span>(activationCode);<br>  licenseStatus = &#123;<br>    <span class="hljs-attr">activated</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">name</span>: decoded.<span class="hljs-property">name</span>,<br>    <span class="hljs-attr">product</span>: decoded.<span class="hljs-property">product</span>,<br>    <span class="hljs-attr">edition</span>: decoded.<span class="hljs-property">edition</span>,<br>    <span class="hljs-attr">productDisplayName</span>: <span class="hljs-title function_">getProductDisplayName</span>(decoded.<span class="hljs-property">product</span>, decoded.<span class="hljs-property">edition</span>),<br>    <span class="hljs-attr">deviceId</span>: decoded.<span class="hljs-property">deviceId</span>,<br>    <span class="hljs-attr">licenseKey</span>: decoded.<span class="hljs-property">licenseKey</span>,<br>    <span class="hljs-attr">activationCode</span>: activationCode,<br>    <span class="hljs-attr">trial</span>: <span class="hljs-literal">false</span>,<br>    <span class="hljs-attr">trialDaysLeft</span>: <span class="hljs-number">0</span>,<br>  &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>流程为</p>
+<ul>
+<li>把 <code>activationCode</code> 写入 userData/activation.key</li>
+<li>解密出字段</li>
+<li>更新 <code>licenseStatus</code></li>
+<li>关闭试用，清零<code> trialDaysLeft</code></li>
+</ul>
+<h2 id="0x05-结束">0x05 结束</h2>
+<p>折腾大概就到这里了，没有混淆实属良善，发一张好人卡</p>
+<p>最后再次声明</p>
+<blockquote>
+<p>仅做技术交流之用，请支持正版软件</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%80%86%E5%90%91/" class="category-chain-item">逆向</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>记一次StarUML破解</div>
+      <div>https://www.letr7.com/2026/04/21/cracking-staruml/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>letr</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月21日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2026年4月21日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/26/letcode-1/" title="从零开始的 Agent 开发：从 Agent Loop 开始">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从零开始的 Agent 开发：从 Agent Loop 开始</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/03/markdown-latex-mermaid-test/" title="Markdown、LaTeX 与 Mermaid 渲染测试">
+                        <span class="hidden-mobile">Markdown、LaTeX 与 Mermaid 渲染测试</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"letr007/letr007.github.io","repo-id":"R_kgDOMoX3AA","category":"Announcements","category-id":"DIC_kwDOMoX3AM4C55A-","theme-light":"light","theme-dark":"dark_protanopia","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark_protanopia';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-love"></i> <a href="https://icp.gov.moe/?keyword=20250077" target="_blank">萌ICP备20250077号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+    <script>
+      if (screen.width >= 768) {
+        var s = document.createElement('script');
+        s.src = 'https://fastly.jsdelivr.net/npm/live2d-widgets@latest/dist/autoload.js';
+        document.body.appendChild(s);
+      }
+    </script>
+    <style>
+      /* 强制修正：无论脚本在哪加载，容器必须固定在窗口之上 */
+      #waifu {
+        position: fixed !important;
+        left: 20px !important;
+        bottom: 20px !important;
+        z-index: 999999 !important; /* 给一个极高的层级，超过 Fluid 的正文区 */
+        line-height: 0;
+      }
+      /* 修正工具栏被压在下面的问题 */
+      .waifu-tool {
+        top: 20px !important; 
+      }
+    </style>
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

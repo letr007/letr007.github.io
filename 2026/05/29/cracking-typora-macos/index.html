@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+    <link rel="canonical" href="https://www.letr7.com/2026/05/29/cracking-typora-macos/"/>
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="letr">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="0x00 起因 Typora是一款非常好用的Markdown编辑器，但从1.0版本开始转为付费软件。Windows版有现成的基于Electron的破解方案（asar解包+JS Hook注入），但macOS版是原生Cocoa应用，不是Electron，没有app.asar可以解包。 网上找到的其他破解方案为修改前端中的e.hasActivated&#x3D;&quot;true&quot;&#x3D;&#x3D;e.hasAct">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Typora macOS版破解">
+<meta property="og:url" content="https://www.letr7.com/2026/05/29/cracking-typora-macos/index.html">
+<meta property="og:site_name" content="Letr的个人博客(～￣▽￣)～">
+<meta property="og:description" content="0x00 起因 Typora是一款非常好用的Markdown编辑器，但从1.0版本开始转为付费软件。Windows版有现成的基于Electron的破解方案（asar解包+JS Hook注入），但macOS版是原生Cocoa应用，不是Electron，没有app.asar可以解包。 网上找到的其他破解方案为修改前端中的e.hasActivated&#x3D;&quot;true&quot;&#x3D;&#x3D;e.hasAct">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-02T04:30:18.758Z">
+<meta property="article:author" content="Letr">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>记一次Typora macOS版破解 - Letr的个人博客(～￣▽￣)～</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.letr7.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Letr&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="记一次Typora macOS版破解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        letr
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-29 16:00" pubdate>
+          2026年5月29日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">记一次Typora macOS版破解</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2026-09-02T04:30:18+00:00
+                  
+                  
+
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="0x00-起因">0x00 起因</h2>
+<p>Typora是一款非常好用的Markdown编辑器，但从1.0版本开始转为付费软件。Windows版有现成的基于Electron的破解方案（asar解包+JS Hook注入），但macOS版是原生Cocoa应用，不是Electron，没有app.asar可以解包。</p>
+<p>网上找到的其他破解方案为修改前端中的<code>e.hasActivated=&quot;true&quot;==e.hasActivated</code>部分实现验证绕过，但在实践后发现此种方法似乎不再适用于mac OS版的Typora。</p>
+<p>于是在claude的帮助下逆向一下。</p>
+<blockquote>
+<p>注：本文仅学习交流技术原理，请购买正版许可证支持正版</p>
+</blockquote>
+<h2 id="0x01-初步分析">0x01 初步分析</h2>
+<p>先看看Typora.app的结构</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">Typora.app/<br>├── Contents/<br>│   ├── MacOS/<br>│   │   └── Typora          ← Mach-O universal binary (x86_64 + arm64)<br>│   ├── Frameworks/<br>│   │   └── Sparkle.framework<br>│   └── Resources/<br>│       ├── TypeMark/<br>│       │   ├── appsrc/<br>│       │   │   └── main.js<br>│       │   ├── page-dist/<br>│       │   │   ├── license.html<br>│       │   │   └── static/js/LicenseIndex.*.js<br>│       │   └── ...<br>│       └── ...<br></code></pre></td></tr></table></figure>
+<p>没有Electron Framework，没有app.asar。<code>file</code>命令确认是原生Mach-O二进制：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ file /Applications/Typora.app/Contents/MacOS/Typora<br>Mach-O universal binary with 2 architectures: [x86_64] [arm64]<br></code></pre></td></tr></table></figure>
+<p>代码签名是adhoc（无正式签名），这意味着patch后重签名很方便：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ codesign -d --verbose /Applications/Typora.app<br>Signature=adhoc<br></code></pre></td></tr></table></figure>
+<h2 id="0x02-寻找突破口">0x02 寻找突破口</h2>
+<p>用<code>strings</code>在二进制中搜索关键信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ strings Typora | grep -i <span class="hljs-string">&quot;api/client&quot;</span><br>api/client/renew<br>api/client/activate<br>api/client/deactivate<br></code></pre></td></tr></table></figure>
+<p>有激活API。再找找公钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ strings Typora | grep -A8 <span class="hljs-string">&quot;BEGIN PUBLIC KEY&quot;</span><br>-----BEGIN PUBLIC KEY-----<br>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7nVoGCHqIMJyqgALEUrc<br>5JJhap0+HtJqzPE04pz4y+nrOmY7/12f3HvZyyoRsxKdXTZbO0wEHFIh0cRqsuaJ<br>...<br>DwIDAQAB<br>-----END PUBLIC KEY-----<br></code></pre></td></tr></table></figure>
+<p>RSA 2048公钥，出现了2次（x86_64和arm64各一份）。这个公钥用来验证激活签名。</p>
+<p>再看看有没有离线激活相关的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ strings Typora | grep -i <span class="hljs-string">&quot;offlineActivation&quot;</span><br>offlineActivation:callback:<br>offlineActivationMachineCode<br></code></pre></td></tr></table></figure>
+<p>有离线激活入口。一种思路：<strong>替换二进制中的公钥为自己的，然后用自己的私钥签名生成Activation Token</strong>。</p>
+<h2 id="0x03-逆向激活流程">0x03 逆向激活流程</h2>
+<h3 id="前端JS层">前端JS层</h3>
+<p>在<code>page-dist/static/js/LicenseIndex.*.js</code>中找到离线激活的调用逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// token 格式检查：必须以 + 开头，# 结尾</span><br><span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;+&quot;</span> == t[<span class="hljs-number">0</span>] || <span class="hljs-string">&quot;#&quot;</span> == t[t.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]) &#123; ... &#125;<br><br><span class="hljs-comment">// 去掉首尾标记</span><br>t = t.<span class="hljs-title function_">substr</span>(<span class="hljs-number">1</span>, t.<span class="hljs-property">length</span> - <span class="hljs-number">2</span>)<br><br><span class="hljs-comment">// macOS (window.webkit) 特殊处理</span><br>n = t.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;|&quot;</span>)          <span class="hljs-comment">// 用 | 分割</span><br>a = r[<span class="hljs-number">0</span>]                  <span class="hljs-comment">// 第一部分：base64编码的JSON</span><br>i = r[<span class="hljs-number">1</span>]                  <span class="hljs-comment">// 第二部分：签名</span><br>o = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-title function_">atob</span>(a))  <span class="hljs-comment">// base64解码并解析JSON</span><br>o.<span class="hljs-property">sig</span> = i                 <span class="hljs-comment">// 把签名加入字典</span><br>t = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(o)     <span class="hljs-comment">// 重新序列化</span><br><br><span class="hljs-comment">// 传给原生</span><br><span class="hljs-variable language_">window</span>.<span class="hljs-property">Setting</span>.<span class="hljs-title function_">invokeWithCallback</span>(<span class="hljs-string">&quot;offlineActivation&quot;</span>, t)<br></code></pre></td></tr></table></figure>
+<p>所以Token格式为：<code>+base64(JSON)|signature_base64#</code></p>
+<h3 id="原生层：反汇编分析">原生层：反汇编分析</h3>
+<p>用<code>nm</code>找到关键方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ nm Typora | grep -i <span class="hljs-string">&quot;verifySig\|offlineActivation\|Crypto&quot;</span><br>-[LicenseManager offlineActivation:callback:]<br>-[LicenseManager verifySig:]<br>-[LicenseManager writeLicenseInfo:with:from:]<br>+[Crypto verify:with:]<br></code></pre></td></tr></table></figure>
+<p>用<code>otool</code>反汇编<code>offlineActivation:callback:</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">1.</span> [Utils jsonStringToObject: t]     → 解析JSON为NSDictionary<br><span class="hljs-number">2.</span> 检查是否为NSDictionary<br><span class="hljs-number">3.</span> 取 <span class="hljs-built_in">dict</span>[<span class="hljs-string">&quot;email&quot;</span>] 和 <span class="hljs-built_in">dict</span>[<span class="hljs-string">&quot;license&quot;</span>]<br><span class="hljs-number">4.</span> 调用 [<span class="hljs-variable language_">self</span> writeLicenseInfo:email <span class="hljs-keyword">with</span>:license <span class="hljs-keyword">from</span>:<span class="hljs-built_in">dict</span>]<br></code></pre></td></tr></table></figure>
+<p><code>writeLicenseInfo:with:from:</code>的逻辑：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> [self verifySig: dict]            → 验证签名<br><span class="hljs-bullet">2.</span> 如果验证失败 → 返回false<br><span class="hljs-bullet">3.</span> 验证成功 → 保存license信息<br></code></pre></td></tr></table></figure>
+<h3 id="签名验证逻辑">签名验证逻辑</h3>
+<p>反汇编<code>[LicenseManager verifySig:]</code>，核心流程：</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs vbnet"><span class="hljs-number">1</span>. dict.allKeys → sortedArrayUsingSelector:<span class="hljs-keyword">compare</span>:  (按字母排序)<br><span class="hljs-number">2</span>. 遍历排序后的<span class="hljs-keyword">key</span>，跳过 <span class="hljs-string">&quot;sig&quot;</span>、<span class="hljs-string">&quot;oldSig&quot;</span>、<span class="hljs-string">&quot;oldFinger&quot;</span><br><span class="hljs-number">3</span>. 对每个<span class="hljs-keyword">key</span>：取值 → [StringUtils ensureString:] → stringByAppendingString: 拼接<br><span class="hljs-number">4</span>. 最终得到一个拼接字符串<br><span class="hljs-number">5</span>. 调用 [Crypto verify:拼接字符串 <span class="hljs-keyword">with</span>:dict[<span class="hljs-string">&quot;sig&quot;</span>]]<br></code></pre></td></tr></table></figure>
+<p>反汇编<code>[Crypto verify:with:]</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 第一个参数(data)：[NSString dataUsingEncoding:NSUTF8StringEncoding]<br><span class="hljs-bullet">2.</span> 第二个参数(sig)：[NSData initWithBase64EncodedString:options:]<br><span class="hljs-bullet">3.</span> SecItemImport 导入硬编码的PEM公钥<br><span class="hljs-bullet">4.</span> SecVerifyTransformCreate 创建验证transform<br><span class="hljs-bullet">5.</span> SecTransformSetAttribute: kSecDigestTypeAttribute = kSecDigestSHA2<br><span class="hljs-bullet">6.</span> SecTransformSetAttribute: kSecDigestLengthAttribute = 256<br><span class="hljs-bullet">7.</span> SecTransformExecute 执行验证<br></code></pre></td></tr></table></figure>
+<p>确认：<strong>SHA256 + PKCS1v15 签名验证</strong>。</p>
+<h2 id="0x04-关键坑点：atob编码问题">0x04 关键坑点：atob编码问题</h2>
+<p>这里掉了一个非常隐蔽的坑。</p>
+<p>JS前端用<code>window.atob()</code>解码base64，但atob返回的是Latin1 binary string。如果JSON中包含非ASCII字符（比如中文设备名），UTF-8多字节序列会被按Latin1逐字节解码为乱码：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dns">原始：letr的MacBook Air     (UTF-<span class="hljs-number">8</span>: E7 <span class="hljs-number">9</span><span class="hljs-keyword">A</span> <span class="hljs-number">84</span>)<br>atob后：letrçMacBook Air    (Latin1: ç=E7, =<span class="hljs-number">9</span><span class="hljs-keyword">A</span>, =<span class="hljs-number">84</span>)<br></code></pre></td></tr></table></figure>
+<p>这个乱码后的字符串被<code>JSON.parse</code>解析，然后传给原生。原生拿到的值就是乱码的。</p>
+<p>所以<strong>签名时必须用atob乱码后的值来拼接</strong>，否则签名验证永远不会通过：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 模拟浏览器 atob 行为</span><br><span class="hljs-keyword">const</span> atobResult = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(jsonBase64, <span class="hljs-string">&#x27;base64&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;latin1&#x27;</span>);<br><span class="hljs-keyword">const</span> parsedAfterAtob = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(atobResult);<br><br><span class="hljs-comment">// 用乱码后的值构造签名数据</span><br><span class="hljs-keyword">const</span> sortedKeys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(parsedAfterAtob)<br>    .<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> ![<span class="hljs-string">&#x27;sig&#x27;</span>,<span class="hljs-string">&#x27;oldSig&#x27;</span>,<span class="hljs-string">&#x27;oldFinger&#x27;</span>].<span class="hljs-title function_">includes</span>(k))<br>    .<span class="hljs-title function_">sort</span>();<br><span class="hljs-keyword">const</span> dataToSign = sortedKeys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> <span class="hljs-title class_">String</span>(parsedAfterAtob[k])).<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>这个问题调试了很久才发现，是整个破解过程中最隐蔽的一环。</p>
+<h2 id="0x05-实现">0x05 实现</h2>
+<p>完整的破解流程：</p>
+<h3 id="1-生成RSA-2048密钥对">1. 生成RSA 2048密钥对</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> &#123; publicKey, privateKey &#125; = crypto.<span class="hljs-title function_">generateKeyPairSync</span>(<span class="hljs-string">&#x27;rsa&#x27;</span>, &#123;<br>    <span class="hljs-attr">modulusLength</span>: <span class="hljs-number">2048</span>,<br>    <span class="hljs-attr">publicKeyEncoding</span>: &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;spki&#x27;</span>, <span class="hljs-attr">format</span>: <span class="hljs-string">&#x27;pem&#x27;</span> &#125;,<br>    <span class="hljs-attr">privateKeyEncoding</span>: &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;pkcs8&#x27;</span>, <span class="hljs-attr">format</span>: <span class="hljs-string">&#x27;pem&#x27;</span> &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="2-替换二进制中的公钥">2. 替换二进制中的公钥</h3>
+<p>新公钥格式化为与原始公钥完全相同的字节长度（450字节），然后在二进制中搜索并替换：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> binaryData = fs.<span class="hljs-title function_">readFileSync</span>(binPath);<br><span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>    <span class="hljs-keyword">const</span> idx = binaryData.<span class="hljs-title function_">indexOf</span>(originalKeyBuf, offset);<br>    <span class="hljs-keyword">if</span> (idx === -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>    newKeyBuf.<span class="hljs-title function_">copy</span>(binaryData, idx);<br>    offset = idx + newKeyBuf.<span class="hljs-property">length</span>;<br>&#125;<br>fs.<span class="hljs-title function_">writeFileSync</span>(binPath, binaryData);<br></code></pre></td></tr></table></figure>
+<p>两个架构（x86_64 + arm64）各替换一处，共2处。</p>
+<h3 id="3-生成Activation-Token">3. 生成Activation Token</h3>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ACT_ENTITY</span> = &#123; deviceId, fingerprint, email, license, version, date, type &#125;;<br><span class="hljs-keyword">const</span> licenseJSON = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(<span class="hljs-variable constant_">ACT_ENTITY</span>);<br><span class="hljs-keyword">const</span> jsonBase64 = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(licenseJSON, <span class="hljs-string">&#x27;utf8&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>);<br><br><span class="hljs-comment">// 关键：模拟atob乱码</span><br><span class="hljs-keyword">const</span> atobResult = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(jsonBase64, <span class="hljs-string">&#x27;base64&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;latin1&#x27;</span>);<br><span class="hljs-keyword">const</span> parsed = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(atobResult);<br><br><span class="hljs-comment">// 按key排序拼接值（跳过sig/oldSig/oldFinger）</span><br><span class="hljs-keyword">const</span> dataToSign = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(parsed)<br>    .<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> !skipKeys.<span class="hljs-title function_">has</span>(k)).<span class="hljs-title function_">sort</span>()<br>    .<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> <span class="hljs-title class_">String</span>(parsed[k])).<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>);<br><br><span class="hljs-comment">// SHA256 + PKCS1v15 签名</span><br><span class="hljs-keyword">const</span> signature = crypto.<span class="hljs-title function_">sign</span>(<span class="hljs-string">&#x27;SHA256&#x27;</span>, <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(dataToSign, <span class="hljs-string">&#x27;utf8&#x27;</span>), &#123;<br>    <span class="hljs-attr">key</span>: privateKey, <span class="hljs-attr">padding</span>: crypto.<span class="hljs-property">constants</span>.<span class="hljs-property">RSA_PKCS1_PADDING</span><br>&#125;);<br><br><span class="hljs-comment">// 组装token</span><br><span class="hljs-keyword">const</span> token = <span class="hljs-string">&#x27;+&#x27;</span> + jsonBase64 + <span class="hljs-string">&#x27;|&#x27;</span> + signature.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>) + <span class="hljs-string">&#x27;#&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="4-Patch-验证服务器地址">4. Patch 验证服务器地址</h3>
+<p>仅替换公钥还不够。Typora 启动后会调用 <code>[LicenseManager renew]</code> 向 <code>store.typora.io/api/client/renew</code> 发请求。如果服务器返回了响应，Typora 会用返回的数据再次调用 <code>writeLicenseInfo:with:from:</code> → <code>verifySig:</code>。但服务器返回的数据是用<strong>官方私钥</strong>签名的，我们替换后的公钥验证不通过 → 调用 <code>unfillLicense</code> → 掉激活。</p>
+<p>反汇编 <code>renew</code> 的 block_invoke 确认了这个流程：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">// renew 回调</span><br><span class="hljs-keyword">if</span> (response[<span class="hljs-string">&quot;success&quot;</span>].boolValue) &#123;<br>    <span class="hljs-comment">// 用服务器返回的数据验证签名</span><br>    <span class="hljs-keyword">if</span> (![self writeLicenseInfo:email <span class="hljs-keyword">with</span>:license <span class="hljs-keyword">from</span>:responseDict]) &#123;<br>        [<span class="hljs-meta">self unfillLicense</span>];  <span class="hljs-comment">// 验证失败 → 撤销激活！</span><br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 请求失败 → 只递增重试计数器，不撤销</span><br>    failedCounts++;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>解决方案：直接在二进制中把服务器 URL 替换为 <code>https://127.0.0.1</code>，让 renew 请求永远连不上。请求失败时 Typora 不会撤销激活。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> urlReplacements = [<br>    &#123; <span class="hljs-attr">from</span>: <span class="hljs-string">&#x27;https://store.typora.io&#x27;</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">&#x27;https://127.0.0.1&#x27;</span> &#125;,<br>    &#123; <span class="hljs-attr">from</span>: <span class="hljs-string">&#x27;https://dian.typora.com.cn&#x27;</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">&#x27;https://127.0.0.1&#x27;</span> &#125;<br>];<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> &#123; <span class="hljs-keyword">from</span>, to &#125; <span class="hljs-keyword">of</span> urlReplacements) &#123;<br>    <span class="hljs-keyword">const</span> fromBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-keyword">from</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>);<br>    <span class="hljs-keyword">const</span> toBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(fromBuf.<span class="hljs-property">length</span>, <span class="hljs-number">0</span>); <span class="hljs-comment">// null 填充剩余</span><br>    <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(to, <span class="hljs-string">&#x27;utf8&#x27;</span>).<span class="hljs-title function_">copy</span>(toBuf);<br>    <span class="hljs-comment">// 在 binaryData 中搜索替换...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>两个 URL 各出现 2 次（x86_64 + arm64），共 patch 4 处。这样所有修改都在 app 内部，不需要改 <code>/etc/hosts</code>，回滚时还原 <code>.bak</code> 即可。</p>
+<h3 id="5-重新签名应用">5. 重新签名应用</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">codesign --force --deep -s - /Applications/Typora.app<br></code></pre></td></tr></table></figure>
+<h3 id="6-在Typora中激活">6. 在Typora中激活</h3>
+<p>打开Typora → 帮助 → 我的许可证 → 离线激活 → 粘贴Token → 激活成功</p>
+<h2 id="0x06-总结">0x06 总结</h2>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Windows版</th>
+<th>macOS版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构</td>
+<td>Electron</td>
+<td>原生Cocoa + WebKit</td>
+</tr>
+<tr>
+<td>破解方式</td>
+<td>asar解包 + JS Hook</td>
+<td>二进制公钥替换 + URL patch</td>
+</tr>
+<tr>
+<td>签名验证</td>
+<td>JS层crypto.publicDecrypt</td>
+<td>原生SecVerifyTransformCreate</td>
+</tr>
+<tr>
+<td>激活方式</td>
+<td>自动（Hook拦截API）</td>
+<td>手动（生成Token离线激活）</td>
+</tr>
+<tr>
+<td>防掉激活</td>
+<td>Hook拦截renew请求</td>
+<td>Patch服务器URL为localhost</td>
+</tr>
+</tbody>
+</table>
+<p>macOS版的难点在于：</p>
+<ol>
+<li>需要反汇编理解原生验证逻辑</li>
+<li>需要发现atob编码导致的数据不一致问题</li>
+<li>需要精确匹配公钥字节长度</li>
+<li>需要发现renew导致掉激活的问题并patch服务器URL</li>
+</ol>
+<p>最终写成了一个脚本，一键完成patch + token生成。</p>
+<details>
+<summary>完整脚本 (mac.js)</summary>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-meta">#!/usr/bin/env node</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Typora macOS 激活脚本</span><br><span class="hljs-comment"> * 原理：替换二进制中的 RSA 公钥，用自己的私钥签名生成 Activation Token</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;crypto&#x27;</span>);<br><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>);<br><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>);<br><span class="hljs-keyword">const</span> &#123; spawnSync &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;child_process&#x27;</span>);<br><span class="hljs-keyword">const</span> readlineSync = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;readline-sync&#x27;</span>);<br><span class="hljs-keyword">const</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;os&#x27;</span>);<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 配置</span><br><span class="hljs-comment">// ================================</span><br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CONFIG_FILE</span> = path.<span class="hljs-title function_">join</span>(os.<span class="hljs-title function_">homedir</span>(), <span class="hljs-string">&#x27;.typora_crack_config.json&#x27;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">DEFAULT_APP_PATH</span> = <span class="hljs-string">&#x27;/Applications/Typora.app&#x27;</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ORIGINAL_PUB_KEY</span> = <span class="hljs-string">`-----BEGIN PUBLIC KEY-----</span><br><span class="hljs-string">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7nVoGCHqIMJyqgALEUrc</span><br><span class="hljs-string">5JJhap0+HtJqzPE04pz4y+nrOmY7/12f3HvZyyoRsxKdXTZbO0wEHFIh0cRqsuaJ</span><br><span class="hljs-string">PyaOOPbA0BsalofIAY3mRhQQ3vSf+rn3g+w0S+udWmKV9DnmJlpWqizFajU4T/E4</span><br><span class="hljs-string">5ZgMNcXt3E1ips32rdbTR0Nnen9PVITvrbJ3l6CI2BFBImZQZ2P8N+LsqfJsqyVV</span><br><span class="hljs-string">wDkt3mHAVxV7FZbfYWG+8FDSuKQHaCmvgAtChx9hwl3J6RekkqDVa6GIV13D23LS</span><br><span class="hljs-string">qdk0Jb521wFJi/V6QAK6SLBiby5gYN6zQQ5RQpjXtR53MwzTdiAzGEuKdOtrY2Me</span><br><span class="hljs-string">DwIDAQAB</span><br><span class="hljs-string">-----END PUBLIC KEY-----`</span>;<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 工具函数</span><br><span class="hljs-comment">// ================================</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getBinaryPath</span>(<span class="hljs-params">appPath</span>) &#123;<br>    <span class="hljs-keyword">return</span> path.<span class="hljs-title function_">join</span>(appPath, <span class="hljs-string">&#x27;Contents&#x27;</span>, <span class="hljs-string">&#x27;MacOS&#x27;</span>, <span class="hljs-string">&#x27;Typora&#x27;</span>);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">readCache</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-variable constant_">CONFIG_FILE</span>)) &#123;<br>            <span class="hljs-keyword">const</span> data = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(fs.<span class="hljs-title function_">readFileSync</span>(<span class="hljs-variable constant_">CONFIG_FILE</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>));<br>            <span class="hljs-keyword">if</span> (data.<span class="hljs-property">path</span> &amp;&amp; fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getBinaryPath</span>(data.<span class="hljs-property">path</span>))) &#123;<br>                <span class="hljs-keyword">return</span> data;<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br>    <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">path</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">machineCode</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">email</span>: <span class="hljs-literal">null</span> &#125;;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">saveCache</span>(<span class="hljs-params">obj</span>) &#123;<br>    <span class="hljs-keyword">try</span> &#123; fs.<span class="hljs-title function_">writeFileSync</span>(<span class="hljs-variable constant_">CONFIG_FILE</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>), <span class="hljs-string">&#x27;utf8&#x27;</span>); &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getNowDateStr</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> now = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();<br>    <span class="hljs-keyword">const</span> dd = <span class="hljs-title class_">String</span>(now.<span class="hljs-title function_">getDate</span>()).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;0&#x27;</span>);<br>    <span class="hljs-keyword">const</span> mm = <span class="hljs-title class_">String</span>(now.<span class="hljs-title function_">getMonth</span>() + <span class="hljs-number">1</span>).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;0&#x27;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">$&#123;mm&#125;</span>/<span class="hljs-subst">$&#123;dd&#125;</span>/<span class="hljs-subst">$&#123;now.getFullYear()&#125;</span>`</span>;<br>&#125;<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 选择 Typora 路径</span><br><span class="hljs-comment">// ================================</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">chooseTyporaPath</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> cache = <span class="hljs-title function_">readCache</span>();<br><br>    <span class="hljs-comment">// 1. 缓存</span><br>    <span class="hljs-keyword">if</span> (cache.<span class="hljs-property">path</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\n✅ 检测到缓存路径: <span class="hljs-subst">$&#123;cache.path&#125;</span>`</span>);<br>        <span class="hljs-keyword">const</span> use = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;是否使用此路径？[Y/n]：&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();<br>        <span class="hljs-keyword">if</span> (use !== <span class="hljs-string">&#x27;n&#x27;</span> &amp;&amp; use !== <span class="hljs-string">&#x27;no&#x27;</span>) <span class="hljs-keyword">return</span> cache.<span class="hljs-property">path</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 2. 默认路径</span><br>    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getBinaryPath</span>(<span class="hljs-variable constant_">DEFAULT_APP_PATH</span>))) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\n✅ 检测到默认路径: <span class="hljs-subst">$&#123;DEFAULT_APP_PATH&#125;</span>`</span>);<br>        <span class="hljs-keyword">const</span> use = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;是否使用此路径？[Y/n]：&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();<br>        <span class="hljs-keyword">if</span> (use !== <span class="hljs-string">&#x27;n&#x27;</span> &amp;&amp; use !== <span class="hljs-string">&#x27;no&#x27;</span>) &#123;<br>            <span class="hljs-title function_">saveCache</span>(&#123; ...cache, <span class="hljs-attr">path</span>: <span class="hljs-variable constant_">DEFAULT_APP_PATH</span> &#125;);<br>            <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">DEFAULT_APP_PATH</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 3. 文件夹选择</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">const</span> output = <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;osascript&#x27;</span>, [<span class="hljs-string">&#x27;-e&#x27;</span>,<br>            <span class="hljs-string">&#x27;POSIX path of (choose folder with prompt &quot;请选择 Typora.app 所在目录&quot;)&#x27;</span><br>        ], &#123; <span class="hljs-attr">encoding</span>: <span class="hljs-string">&#x27;utf8&#x27;</span> &#125;).<span class="hljs-property">stdout</span>.<span class="hljs-title function_">trim</span>();<br>        <span class="hljs-keyword">if</span> (output) &#123;<br>            <span class="hljs-keyword">let</span> p = path.<span class="hljs-title function_">resolve</span>(output.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\/$/</span>, <span class="hljs-string">&#x27;&#x27;</span>));<br>            <span class="hljs-keyword">if</span> (!p.<span class="hljs-title function_">endsWith</span>(<span class="hljs-string">&#x27;.app&#x27;</span>)) p = path.<span class="hljs-title function_">join</span>(p, <span class="hljs-string">&#x27;Typora.app&#x27;</span>);<br>            <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getBinaryPath</span>(p))) &#123;<br>                <span class="hljs-title function_">saveCache</span>(&#123; ...cache, <span class="hljs-attr">path</span>: p &#125;);<br>                <span class="hljs-keyword">return</span> p;<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br><br>    <span class="hljs-comment">// 4. 手动输入</span><br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">const</span> input = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;请输入 Typora.app 路径：&#x27;</span>).<span class="hljs-title function_">trim</span>();<br>        <span class="hljs-keyword">if</span> (!input) <span class="hljs-keyword">continue</span>;<br>        <span class="hljs-keyword">const</span> p = path.<span class="hljs-title function_">resolve</span>(input);<br>        <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(<span class="hljs-title function_">getBinaryPath</span>(p))) &#123;<br>            <span class="hljs-title function_">saveCache</span>(&#123; ...cache, <span class="hljs-attr">path</span>: p &#125;);<br>            <span class="hljs-keyword">return</span> p;<br>        &#125;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;❌ 路径无效，未找到 Typora 二进制&#x27;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 获取机器码和邮箱</span><br><span class="hljs-comment">// ================================</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">getMachineCodeAndEmail</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> cache = <span class="hljs-title function_">readCache</span>();<br><br>    <span class="hljs-keyword">if</span> (cache.<span class="hljs-property">machineCode</span> &amp;&amp; cache.<span class="hljs-property">email</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\n✅ 检测到缓存的激活信息:`</span>);<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`   机器码: <span class="hljs-subst">$&#123;cache.machineCode.substring(<span class="hljs-number">0</span>, <span class="hljs-number">30</span>)&#125;</span>...`</span>);<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`   邮箱: <span class="hljs-subst">$&#123;cache.email&#125;</span>`</span>);<br>        <span class="hljs-keyword">const</span> use = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;是否使用此信息？[Y/n]：&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();<br>        <span class="hljs-keyword">if</span> (use !== <span class="hljs-string">&#x27;n&#x27;</span> &amp;&amp; use !== <span class="hljs-string">&#x27;no&#x27;</span>) &#123;<br>            <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">machineCode</span>: cache.<span class="hljs-property">machineCode</span>, <span class="hljs-attr">email</span>: cache.<span class="hljs-property">email</span> &#125;;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">let</span> machineCode, email;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        machineCode = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;\n请输入机器码: &#x27;</span>).<span class="hljs-title function_">trim</span>();<br>        email = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;请输入邮箱: &#x27;</span>).<span class="hljs-title function_">trim</span>();<br>        <span class="hljs-keyword">if</span> (!machineCode) &#123; <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;❌ 机器码不能为空&#x27;</span>); <span class="hljs-keyword">continue</span>; &#125;<br>        <span class="hljs-keyword">if</span> (!email) &#123; <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;❌ 邮箱不能为空&#x27;</span>); <span class="hljs-keyword">continue</span>; &#125;<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br><br>    <span class="hljs-title function_">saveCache</span>(&#123; ...cache, machineCode, email &#125;);<br>    <span class="hljs-keyword">return</span> &#123; machineCode, email &#125;;<br>&#125;<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 回滚还原</span><br><span class="hljs-comment">// ================================</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">rollback</span>(<span class="hljs-params">appPath</span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n🔄 开始回滚还原...&#x27;</span>);<br>    <span class="hljs-keyword">const</span> binPath = <span class="hljs-title function_">getBinaryPath</span>(appPath);<br>    <span class="hljs-keyword">const</span> bakPath = binPath + <span class="hljs-string">&#x27;.bak&#x27;</span>;<br><br>    <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;killall&#x27;</span>, [<span class="hljs-string">&#x27;Typora&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br><br>    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(bakPath)) &#123;<br>        fs.<span class="hljs-title function_">copyFileSync</span>(bakPath, binPath);<br>        fs.<span class="hljs-title function_">rmSync</span>(bakPath, &#123; <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span> &#125;);<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;✅ 已还原 Typora 二进制&#x27;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;⚠️  未找到备份文件，无需回滚&#x27;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;defaults&#x27;</span>, [<span class="hljs-string">&#x27;delete&#x27;</span>, <span class="hljs-string">&#x27;abnerworks.Typora&#x27;</span>, <span class="hljs-string">&#x27;typora-license&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;codesign&#x27;</span>, [<span class="hljs-string">&#x27;--force&#x27;</span>, <span class="hljs-string">&#x27;--deep&#x27;</span>, <span class="hljs-string">&#x27;-s&#x27;</span>, <span class="hljs-string">&#x27;-&#x27;</span>, appPath], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;✅ 已清理授权信息并重新签名&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n🎉 回滚完成！&#x27;</span>);<br>&#125;<br><br><span class="hljs-comment">// ================================</span><br><span class="hljs-comment">// 主流程</span><br><span class="hljs-comment">// ================================</span><br>(<span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) &#123;<br>    process.<span class="hljs-property">stdout</span>.<span class="hljs-title function_">write</span>(<span class="hljs-string">&#x27;\x1Bc&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;=================================&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;    Typora macOS 激活脚本&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;=================================&#x27;</span>);<br><br>    <span class="hljs-comment">// 选择路径</span><br>    <span class="hljs-keyword">const</span> appPath = <span class="hljs-title function_">chooseTyporaPath</span>();<br>    <span class="hljs-keyword">const</span> binPath = <span class="hljs-title function_">getBinaryPath</span>(appPath);<br>    <span class="hljs-keyword">const</span> bakPath = binPath + <span class="hljs-string">&#x27;.bak&#x27;</span>;<br><br>    <span class="hljs-comment">// 检查是否已 patch</span><br>    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(bakPath)) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n⚠️  检测到已激活过（二进制已 patch）&#x27;</span>);<br>        <span class="hljs-keyword">const</span> choice = readlineSync.<span class="hljs-title function_">question</span>(<span class="hljs-string">&#x27;[R]回滚还原 / [P]重新Patch / [Q]退出：&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toUpperCase</span>();<br>        <span class="hljs-keyword">if</span> (choice === <span class="hljs-string">&#x27;R&#x27;</span>) &#123; <span class="hljs-title function_">rollback</span>(appPath); process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">0</span>); &#125;<br>        <span class="hljs-keyword">if</span> (choice !== <span class="hljs-string">&#x27;P&#x27;</span>) &#123; process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">0</span>); &#125;<br>        <span class="hljs-comment">// 还原后重新 patch</span><br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;还原原始二进制...&#x27;</span>);<br>        fs.<span class="hljs-title function_">copyFileSync</span>(bakPath, binPath);<br>        fs.<span class="hljs-title function_">rmSync</span>(bakPath, &#123; <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span> &#125;);<br>        <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;defaults&#x27;</span>, [<span class="hljs-string">&#x27;delete&#x27;</span>, <span class="hljs-string">&#x27;abnerworks.Typora&#x27;</span>, <span class="hljs-string">&#x27;typora-license&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">// 获取机器码</span><br>    <span class="hljs-keyword">const</span> &#123; machineCode, email &#125; = <span class="hljs-title function_">getMachineCodeAndEmail</span>();<br>    <span class="hljs-keyword">const</span> mc = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(machineCode, <span class="hljs-string">&#x27;base64&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;utf8&#x27;</span>));<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\ndeviceId: <span class="hljs-subst">$&#123;mc.l&#125;</span>`</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`fingerprint: <span class="hljs-subst">$&#123;mc.i&#125;</span>`</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`version: <span class="hljs-subst">$&#123;mc.v&#125;</span>`</span>);<br><br>    <span class="hljs-comment">// 关闭 Typora</span><br>    <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;killall&#x27;</span>, [<span class="hljs-string">&#x27;Typora&#x27;</span>], &#123; <span class="hljs-attr">stdio</span>: <span class="hljs-string">&#x27;ignore&#x27;</span> &#125;);<br><br>    <span class="hljs-keyword">const</span> nowDateStr = <span class="hljs-title function_">getNowDateStr</span>();<br><br>    <span class="hljs-comment">// ====== 一、生成密钥对 ======</span><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n一、生成密钥对...&#x27;</span>);<br>    <span class="hljs-keyword">const</span> &#123; publicKey, privateKey &#125; = crypto.<span class="hljs-title function_">generateKeyPairSync</span>(<span class="hljs-string">&#x27;rsa&#x27;</span>, &#123;<br>        <span class="hljs-attr">modulusLength</span>: <span class="hljs-number">2048</span>,<br>        <span class="hljs-attr">publicKeyEncoding</span>: &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;spki&#x27;</span>, <span class="hljs-attr">format</span>: <span class="hljs-string">&#x27;pem&#x27;</span> &#125;,<br>        <span class="hljs-attr">privateKeyEncoding</span>: &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;pkcs8&#x27;</span>, <span class="hljs-attr">format</span>: <span class="hljs-string">&#x27;pem&#x27;</span> &#125;<br>    &#125;);<br><br>    <span class="hljs-comment">// 格式化公钥为与原始公钥相同的字节长度</span><br>    <span class="hljs-keyword">const</span> pubKeyBase64 = publicKey<br>        .<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;-----BEGIN PUBLIC KEY-----&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)<br>        .<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;-----END PUBLIC KEY-----&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)<br>        .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s/g</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br>    <span class="hljs-keyword">const</span> lines = [];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; pubKeyBase64.<span class="hljs-property">length</span>; i += <span class="hljs-number">64</span>) &#123;<br>        lines.<span class="hljs-title function_">push</span>(pubKeyBase64.<span class="hljs-title function_">slice</span>(i, i + <span class="hljs-number">64</span>));<br>    &#125;<br>    <span class="hljs-keyword">const</span> formattedPubKey = <span class="hljs-string">&#x27;-----BEGIN PUBLIC KEY-----\n&#x27;</span> + lines.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;\n&#x27;</span>) + <span class="hljs-string">&#x27;\n-----END PUBLIC KEY-----&#x27;</span>;<br>    <span class="hljs-keyword">const</span> newKeyBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(formattedPubKey, <span class="hljs-string">&#x27;utf8&#x27;</span>);<br>    <span class="hljs-keyword">const</span> originalKeyBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable constant_">ORIGINAL_PUB_KEY</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>);<br><br>    <span class="hljs-keyword">if</span> (newKeyBuf.<span class="hljs-property">length</span> !== originalKeyBuf.<span class="hljs-property">length</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`❌ 公钥长度不匹配: 期望 <span class="hljs-subst">$&#123;originalKeyBuf.length&#125;</span>, 实际 <span class="hljs-subst">$&#123;newKeyBuf.length&#125;</span>`</span>);<br>        process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">1</span>);<br>    &#125;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`✅ 密钥对生成成功 (<span class="hljs-subst">$&#123;newKeyBuf.length&#125;</span> 字节)`</span>);<br><br>    <span class="hljs-comment">// ====== 二、Patch 二进制 ======</span><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n二、Patch 二进制...&#x27;</span>);<br>    fs.<span class="hljs-title function_">copyFileSync</span>(binPath, bakPath);<br><br>    <span class="hljs-keyword">let</span> binaryData = fs.<span class="hljs-title function_">readFileSync</span>(binPath);<br>    <span class="hljs-keyword">let</span> offset = <span class="hljs-number">0</span>, replacements = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">const</span> idx = binaryData.<span class="hljs-title function_">indexOf</span>(originalKeyBuf, offset);<br>        <span class="hljs-keyword">if</span> (idx === -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>        newKeyBuf.<span class="hljs-title function_">copy</span>(binaryData, idx);<br>        offset = idx + newKeyBuf.<span class="hljs-property">length</span>;<br>        replacements++;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (replacements === <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;❌ 未在二进制中找到原始公钥，可能版本不兼容&#x27;</span>);<br>        fs.<span class="hljs-title function_">copyFileSync</span>(bakPath, binPath);<br>        fs.<span class="hljs-title function_">rmSync</span>(bakPath, &#123; <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span> &#125;);<br>        process.<span class="hljs-title function_">exit</span>(<span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 同时 patch 验证服务器 URL，防止 renew 请求导致掉激活</span><br>    <span class="hljs-keyword">const</span> urlReplacements = [<br>        &#123; <span class="hljs-attr">from</span>: <span class="hljs-string">&#x27;https://store.typora.io&#x27;</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">&#x27;https://127.0.0.1&#x27;</span> &#125;,<br>        &#123; <span class="hljs-attr">from</span>: <span class="hljs-string">&#x27;https://dian.typora.com.cn&#x27;</span>, <span class="hljs-attr">to</span>: <span class="hljs-string">&#x27;https://127.0.0.1&#x27;</span> &#125;<br>    ];<br>    <span class="hljs-keyword">let</span> urlPatched = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> &#123; <span class="hljs-keyword">from</span>, to &#125; <span class="hljs-keyword">of</span> urlReplacements) &#123;<br>        <span class="hljs-keyword">const</span> fromBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-keyword">from</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>);<br>        <span class="hljs-keyword">const</span> toBuf = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(fromBuf.<span class="hljs-property">length</span>, <span class="hljs-number">0</span>); <span class="hljs-comment">// null 填充</span><br>        <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(to, <span class="hljs-string">&#x27;utf8&#x27;</span>).<span class="hljs-title function_">copy</span>(toBuf);<br>        <span class="hljs-keyword">let</span> off = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            <span class="hljs-keyword">const</span> idx = binaryData.<span class="hljs-title function_">indexOf</span>(fromBuf, off);<br>            <span class="hljs-keyword">if</span> (idx === -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>            toBuf.<span class="hljs-title function_">copy</span>(binaryData, idx);<br>            off = idx + toBuf.<span class="hljs-property">length</span>;<br>            urlPatched++;<br>        &#125;<br>    &#125;<br><br>    fs.<span class="hljs-title function_">writeFileSync</span>(binPath, binaryData);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`✅ 已替换 <span class="hljs-subst">$&#123;replacements&#125;</span> 处公钥, <span class="hljs-subst">$&#123;urlPatched&#125;</span> 处服务器地址`</span>);<br><br>    <span class="hljs-comment">// ====== 三、生成 Activation Token ======</span><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n三、生成 Activation Token...&#x27;</span>);<br><br>    <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ACT_ENTITY</span> = &#123;<br>        <span class="hljs-attr">deviceId</span>: mc.<span class="hljs-property">l</span>,<br>        <span class="hljs-attr">fingerprint</span>: mc.<span class="hljs-property">i</span>,<br>        <span class="hljs-attr">email</span>: email,<br>        <span class="hljs-attr">license</span>: <span class="hljs-string">&quot;Cracked_By_DreamNya&amp;Letr&quot;</span>,<br>        <span class="hljs-attr">version</span>: mc.<span class="hljs-property">v</span>,<br>        <span class="hljs-attr">date</span>: nowDateStr,<br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;DreamNya&quot;</span><br>    &#125;;<br><br>    <span class="hljs-comment">// Token 格式: +base64(JSON)|signature#</span><br>    <span class="hljs-comment">// 关键：浏览器 atob() 把 UTF-8 多字节字符按 Latin1 解码</span><br>    <span class="hljs-comment">// 原生验证时用的是 atob 乱码后的值，所以签名必须基于乱码后的数据</span><br>    <span class="hljs-keyword">const</span> licenseJSON = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(<span class="hljs-variable constant_">ACT_ENTITY</span>);<br>    <span class="hljs-keyword">const</span> jsonBase64 = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(licenseJSON, <span class="hljs-string">&#x27;utf8&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>);<br><br>    <span class="hljs-comment">// 模拟浏览器 atob：UTF-8 bytes → Latin1 string</span><br>    <span class="hljs-keyword">const</span> atobResult = <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(jsonBase64, <span class="hljs-string">&#x27;base64&#x27;</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;latin1&#x27;</span>);<br>    <span class="hljs-keyword">const</span> parsedAfterAtob = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(atobResult);<br><br>    <span class="hljs-comment">// 按 key 字母排序，跳过 sig/oldSig/oldFinger，拼接值</span><br>    <span class="hljs-keyword">const</span> skipKeys = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>([<span class="hljs-string">&#x27;sig&#x27;</span>, <span class="hljs-string">&#x27;oldSig&#x27;</span>, <span class="hljs-string">&#x27;oldFinger&#x27;</span>]);<br>    <span class="hljs-keyword">const</span> sortedKeys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(parsedAfterAtob).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> !skipKeys.<span class="hljs-title function_">has</span>(k)).<span class="hljs-title function_">sort</span>();<br>    <span class="hljs-keyword">const</span> dataToSign = sortedKeys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">k</span> =&gt;</span> <span class="hljs-title class_">String</span>(parsedAfterAtob[k])).<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>);<br><br>    <span class="hljs-comment">// SHA256 + PKCS1v15 签名</span><br>    <span class="hljs-keyword">const</span> signature = crypto.<span class="hljs-title function_">sign</span>(<span class="hljs-string">&#x27;SHA256&#x27;</span>, <span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(dataToSign, <span class="hljs-string">&#x27;utf8&#x27;</span>), &#123;<br>        <span class="hljs-attr">key</span>: privateKey,<br>        <span class="hljs-attr">padding</span>: crypto.<span class="hljs-property">constants</span>.<span class="hljs-property">RSA_PKCS1_PADDING</span><br>    &#125;);<br><br>    <span class="hljs-keyword">const</span> activationToken = <span class="hljs-string">&#x27;+&#x27;</span> + jsonBase64 + <span class="hljs-string">&#x27;|&#x27;</span> + signature.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>) + <span class="hljs-string">&#x27;#&#x27;</span>;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;✅ Token 生成成功&#x27;</span>);<br><br>    <span class="hljs-comment">// ====== 四、重新签名 ======</span><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n四、重新签名应用...&#x27;</span>);<br>    <span class="hljs-keyword">const</span> signResult = <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;codesign&#x27;</span>, [<span class="hljs-string">&#x27;--force&#x27;</span>, <span class="hljs-string">&#x27;--deep&#x27;</span>, <span class="hljs-string">&#x27;-s&#x27;</span>, <span class="hljs-string">&#x27;-&#x27;</span>, appPath], &#123;<br>        <span class="hljs-attr">encoding</span>: <span class="hljs-string">&#x27;utf8&#x27;</span>, <span class="hljs-attr">stdio</span>: [<span class="hljs-string">&#x27;ignore&#x27;</span>, <span class="hljs-string">&#x27;pipe&#x27;</span>, <span class="hljs-string">&#x27;pipe&#x27;</span>]<br>    &#125;);<br>    <span class="hljs-keyword">if</span> (signResult.<span class="hljs-property">status</span> !== <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`⚠️  签名警告: <span class="hljs-subst">$&#123;(signResult.stderr || <span class="hljs-string">&#x27;&#x27;</span>).trim()&#125;</span>`</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;✅ 应用重新签名成功&#x27;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// ====== 完成 ======</span><br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n🎉 全部完成！&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n使用方法：&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;1. 打开 Typora → 帮助 → 我的许可证&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;2. 点击「获取 Activation Token」进入离线激活页面&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;3. 在 Activation Token 框中粘贴以下内容：\n&#x27;</span>);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(activationToken);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;\n（Token 已复制到剪贴板）&#x27;</span>);<br><br>    <span class="hljs-keyword">try</span> &#123; <span class="hljs-title function_">spawnSync</span>(<span class="hljs-string">&#x27;pbcopy&#x27;</span>, [], &#123; <span class="hljs-attr">input</span>: activationToken, <span class="hljs-attr">encoding</span>: <span class="hljs-string">&#x27;utf8&#x27;</span> &#125;); &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br>&#125;)();<br></code></pre></td></tr></table></figure>
+</details>
+<blockquote>
+<p>仅做技术交流之用，请支持正版软件</p>
+<p>在此感谢<a target="_blank" rel="noopener" href="https://www.52pojie.cn/forum.php?mod=forumdisplay&amp;fid=75&amp;filter=typeid&amp;typeid=307">[讨论]<strong>代码整理【Typora激活劫持 支持到1.13.6】</strong></a> 提供参考！</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%80%86%E5%90%91/" class="category-chain-item">逆向</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>记一次Typora macOS版破解</div>
+      <div>https://www.letr7.com/2026/05/29/cracking-typora-macos/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>letr</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年5月29日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2026年9月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/06/15/cracking-pathfinder-macos/" title="记一次Path Finder macOS版破解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">记一次Path Finder macOS版破解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/05/may-day-holiday/" title="五一假期">
+                        <span class="hidden-mobile">五一假期</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"letr007/letr007.github.io","repo-id":"R_kgDOMoX3AA","category":"Announcements","category-id":"DIC_kwDOMoX3AM4C55A-","theme-light":"light","theme-dark":"dark_protanopia","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark_protanopia';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-love"></i> <a href="https://icp.gov.moe/?keyword=20250077" target="_blank">萌ICP备20250077号</a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+    <script>
+      if (screen.width >= 768) {
+        var s = document.createElement('script');
+        s.src = 'https://fastly.jsdelivr.net/npm/live2d-widgets@latest/dist/autoload.js';
+        document.body.appendChild(s);
+      }
+    </script>
+    <style>
+      /* 强制修正：无论脚本在哪加载，容器必须固定在窗口之上 */
+      #waifu {
+        position: fixed !important;
+        left: 20px !important;
+        bottom: 20px !important;
+        z-index: 999999 !important; /* 给一个极高的层级，超过 Fluid 的正文区 */
+        line-height: 0;
+      }
+      /* 修正工具栏被压在下面的问题 */
+      .waifu-tool {
+        top: 20px !important; 
+      }
+    </style>
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
